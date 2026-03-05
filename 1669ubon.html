@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMS Shift Board</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+*{font-family:Sarabun;box-sizing:border-box}
+
+body{
+margin:0;
+background:#ffffff;
+color:#2c3e50;
+}
+
+/* HEADER */
+.header{
+display:flex;
+align-items:center;
+justify-content:space-between;
+padding:10px 30px;
+border-bottom:1px solid #e0e6ed;
+}
+
+.header-center{
+text-align:center;
+flex:1;
+}
+
+.header img{
+height:60px;
+}
+
+.header h2{
+font-size:18px;
+margin:5px 0;
+font-weight:600;
+}
+
+/* ⬇️ ขยายกล่องเวลา */
+.clock{
+margin:10px auto;
+padding:10px 18px;
+width:320px;
+background:#f4f6f9;
+border-radius:8px;
+font-size:14px;
+border:1px solid #dbe3f0;
+}
+
+.clock-time{
+font-size:22px;
+font-weight:700;
+}
+
+/* FORM */
+.form-box{
+background:#f9fbfd;
+padding:18px;
+margin:20px auto;
+border-radius:10px;
+max-width:1200px;
+display:flex;
+gap:15px;
+justify-content:center;
+align-items:center;
+flex-wrap:wrap;
+border:1px solid #e0e6ed;
+}
+
+input,select{
+height:44px;
+min-width:220px;
+padding:0 12px;
+border-radius:6px;
+border:1px solid #cfd6e4;
+font-size:14px;
+background:white;
+color:#2c3e50;
+outline:none;
+}
+
+select{appearance:auto;cursor:pointer;}
+
+/* ⬇️ ปุ่มเพิ่มขยายกว้างเท่ากล่องอื่น */
+.add-btn{
+height:44px;
+min-width:220px;
+border-radius:6px;
+border:1px solid #2f6df6;
+background:#2f6df6;
+color:white;
+font-size:14px;
+cursor:pointer;
+font-weight:600;
+}
+.add-btn:hover{background:#2456c9;}
+
+.total-box{
+height:44px;
+min-width:180px;
+background:#eef3ff;
+border:1px solid #2f6df6;
+border-radius:6px;
+display:flex;
+align-items:center;
+justify-content:center;
+font-weight:600;
+font-size:14px;
+color:#2f6df6;
+}
+
+/* SHIFT AREA */
+.container{
+display:flex;
+flex-direction:column;
+gap:20px;
+padding:20px;
+max-width:1400px;
+margin:auto;
+}
+
+.shift{
+background:#f9fbfd;
+padding:18px;
+border-radius:10px;
+border:1px solid #dbe3f0;
+}
+
+.shift h3{
+margin:0 0 15px 0;
+display:flex;
+justify-content:space-between;
+align-items:center;
+font-size:18px;
+font-weight:600;
+}
+
+.count{
+background:#2f6df6;
+color:white;
+padding:4px 10px;
+border-radius:20px;
+font-size:13px;
+}
+
+/* GRID */
+.shift-grid{
+display:grid;
+grid-template-columns:repeat(auto-fill,minmax(150px,1fr));
+gap:12px;
+}
+
+.card{
+background:#ffffff;
+border:1px solid #dbe3f0;
+border-radius:8px;
+padding:10px;
+display:flex;
+flex-direction:column;
+align-items:center;
+text-align:center;
+min-height:150px;
+}
+
+.card img{
+width:55px;
+height:55px;
+border-radius:50%;
+object-fit:cover;
+margin-bottom:8px;
+}
+
+.card strong{
+font-size:13px;
+margin-bottom:6px;
+word-break:break-word;
+}
+
+.badge{
+padding:4px 8px;
+border-radius:6px;
+font-size:11px;
+font-weight:600;
+color:white;
+margin-top:auto;
+}
+
+.CALLTAKER{background:#4da3ff;}
+.CASEINTAKE{background:#2ecc71;}
+.COORDINATOR{background:#f39c12;}
+.DOC{background:#9b59b6;}
+.EMD{background:#e74c3c;}
+.SUPERVISOR{background:#f1c40f;color:black;}
+.IT{background:#7f8c8d;}
+
+.delete{
+margin-top:6px;
+font-size:11px;
+color:#c0392b;
+cursor:pointer;
+}
+
+</style>
+</head>
+
+<body>
+
+<div class="header">
+
+<img src="https://i.postimg.cc/tgMz7SVd/sphch.png">
+
+<div class="header-center">
+<h2>หน้าที่เวรประจำวัน ศูนย์รับแจ้งเหตุและสั่งการ จังหวัดอุบลราชธานี</h2>
+
+<div class="clock">
+<div id="date"></div>
+<div id="time" class="clock-time"></div>
+</div>
+
+</div>
+
+<img src="https://i.postimg.cc/g0JDzFrV/xbc.png">
+
+</div>
+
+<div class="form-box">
+
+<select id="shift">
+<option value="night">🌙 เวรดึก 00.01&nbsp;น. - 08.00&nbsp;น.</option>
+<option value="morning">☀️ เวรเช้า 08.01&nbsp;น. - 16.00&nbsp;น.</option>
+<option value="afternoon">🌤️ เวรบ่าย 16.01&nbsp;น. - 00.00น.</option>
+</select>
+
+<input list="nameList" id="name" placeholder="พิมพ์ค้นหาชื่อ">
+<datalist id="nameList"></datalist>
+
+<select id="position">
+<option value="">เลือกตำแหน่ง</option>
+<option>CALL TAKER</option>
+<option>CASE INTAKE</option>
+<option>COORDINATOR</option>
+<option>DOC</option>
+<option>EMD</option>
+<option>SUPERVISOR</option>
+<option>IT</option>
+</select>
+
+<button class="add-btn" onclick="addItem()">เพิ่มรายชื่อ</button>
+
+<div class="total-box">
+ทั้งหมด&nbsp;:&nbsp;<span id="totalCount">0</span>&nbsp;คน
+</div>
+
+</div>
+                                                                                                                                        
+<<div class="container">
+
+<div class="shift">
+<h3>🌙 เวรดึก 00.01&nbsp;น. - 08.00&nbsp;น. <span class="count" id="nightCount">0</span></h3>
+<div id="night" class="shift-grid"></div>
+</div>
+
+<div class="shift">
+<h3>☀️ เวรเช้า 08.01&nbsp;น. - 16.00&nbsp;น. <span class="count" id="morningCount">0</span></h3>
+<div id="morning" class="shift-grid"></div>
+</div>
+
+<div class="shift">
+<h3>🌤️ เวรบ่าย 16.01&nbsp;น. - 00.00&nbsp;น. <span class="count" id="afternoonCount">0</span></h3>
+<div id="afternoon" class="shift-grid"></div>
+</div>
+
+</div>
+
+<audio id="notifySound">
+<source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+
+
+
+const staffDirectory = [
+{name:"นายวิระบูรณ์ แก่นภักดี",image:"https://i.postimg.cc/P51vs6dR/ว_ระบ_รณ.jpg"},
+{name:"นางสาวนริศรา มะลิหอม",image:"https://i.postimg.cc/sg5Gdn36/ม_วนร_ศรา1.jpg"},
+{name:"นางสาวเบญจมาศ ชามาตย์",image:"https://i.postimg.cc/7YFJRvrT/เปร_ยว_เบญจมาศ1.jpg"},
+{name:"นางสาวรัตติยา พันชัย",image:"https://i.postimg.cc/L6cgWdMK/ร_ตต_ยา_พ_หน_ง.jpg"},
+{name:"นายนิกร วงศ์คำแหง",image:"https://i.postimg.cc/qMP6FfHQ/น_กร.jpg"},
+{name:"นางสาวกุณฑิกา ส่งเสริม",image:"https://i.postimg.cc/FsMk6tXb/ก_ณฑ_กา_พ_ก_อย1.jpg"},
+{name:"นายกฤษกร นางาม",image:"https://i.postimg.cc/GhWTf0nk/กฤษกร_พ_แป_บ.jpg"},
+{name:"นางสาวเกตน์นิภา การะวัตร์",image:"https://i.postimg.cc/m2v1nxWH/เกตน_น_ภา.jpg"},
+{name:"นายชุตินัฐ มหิษานนท์",image:"https://i.postimg.cc/BQrPzWfw/พ_ณ_ฐ11.png"},
+{name:"นางสาวเสาวลักษณ์ ชารีโสม",image:"https://i.postimg.cc/jdpn1VYF/พ_แอนเสารว_ล_กษณ.jpg"},
+{name:"นางสาวนุชจรินทร์ รักษารอด",image:"https://i.postimg.cc/zXsHQmYT/ก_ต_าร_น_ชจร_นทร.jpg"},
+{name:"นางสาวหทัยชนก มะตัน",image:"https://i.postimg.cc/QdcKG6j2/หท_ยชนก.jpg"},
+{name:"นางสาวสิริกานต์ สีแดง",image:"https://i.postimg.cc/GmvTwMc0/ส_ร_กานต.jpg"},
+{name:"นางสาววิรากานต์ วงค์อินทร์",image:"https://i.postimg.cc/SNBYP0b9/1น_ว2.png"},
+{name:"นางสาวสุพัฒตา อุทุมพันธ์",image:"https://i.postimg.cc/JzjHVT1C/อร_ส_พ_ฒตา.png"},
+{name:"นางสาววรรณนิภา ดวงคำ",image:"https://i.postimg.cc/8zLfQyTZ/วรรณ_ภา.jpg"},
+{name:"นางสาวอาจานี มาสพันธ์",image:"https://i.postimg.cc/dVGZPWqK/อาจาน_แอน.jpg"},
+{name:"นางสาวกาญจนา ราษี",image:"https://i.postimg.cc/BQrPzWfP/เจน_กาญจนา.jpg"},
+{name:"นางมลฤดี จันทะพา",image:"https://i.postimg.cc/Dy94NV3D/มลฤด.jpg"},
+{name:"นางสาวพรพิมล จันทา",image:"https://i.postimg.cc/Kv63WXh0/พรพ_มล_น_องแอน.jpg"},
+{name:"นางสาวฉัตรฐริกา คุณมี",image:"https://i.postimg.cc/Kv63WXhr/ฉ_ตรฐร_กา.jpg"},
+{name:"นางสาวณัฐพัชร์ สมใสวิวิตรกุล",image:"https://i.postimg.cc/9F6wk3Hg/พ_เฟ_อง1.png"},
+{name:"นางสาวกัญญาณัฐ สมบูรณ์",image:"https://i.postimg.cc/Dy94NV3g/น_องพ_ง.png"},
+{name:"นางสาวรัตน์สุดา แสงสุข",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png"},
+{name:"นางสาวสมิตตานันท์ อนันตภักดิ์",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png"},
+{name:"นางสาวญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png"},
+{name:"นางสาวสุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg"},
+{name:"นายณัฐพงศ์ มีศรี",image:"https://i.postimg.cc/ZYQp37jq/126874_0_0.jpg"},
+{name:"นางสาวมาฆสิริ หอธรรม",image:"https://i.postimg.cc/T2sgm7QL/อ_ยล_าส_ด.png"},
+{name:"นายบริพัตร กุประดิษฐ์",image:"https://i.postimg.cc/Y0TFH0hw/127961_0_0.jpg"},
+{name:"นายธนรัช เดชกังวาล",image:"https://i.postimg.cc/qBFynbQq/127962_0_0.jpg"},
+{name:"นายอภิชาติ ดุมใหม่",image:"https://i.postimg.cc/9QhpRgQj/xph-chat.jpg"},
+{name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเอ_ะ.png"},
+{name:"นางธนัชพร สมาทอง",image:"https://i.postimg.cc/qMfcSDnq/แม_อ_ว2567.png"},
+{name:"นางสาวพัชรี บุญชิต",image:"https://i.postimg.cc/RVc1B1QN/พ_หน_อยพ_ชร.jpg"},
+{name:"นางสาวว​ราภรณ์​ ปัจฉาพร",image:"https://i.postimg.cc/3JMjVfpd/พ_แก_ว.webp"},
+{name:"นางอินทิรา นิธิวัฒนพงษ์",image:"https://i.postimg.cc/28pdM9vb/พ_ต_อ_นท_รา.webp"},
+{name:"นายอุดม พงษ์พิละ",image:"https://i.postimg.cc/rFFyVM5v/asdasd.png"},
+{name:"นางสาวทิพยวัลย์ สุทธาคง",image:"https://i.postimg.cc/wTK5Z4JN/พ_ว_ลย_พ_หน_ง.jpg"},
+{name:"นางสาวเบ็ญจวรรณ พรมบุตร",image:"https://i.postimg.cc/wTh5p5cL/พ_เอ_เบ_ญ.png"},
+{name:"นายคม พันเพียง",image:"https://i.postimg.cc/xTrGhpH1/ค_ณชายคม_พ_นธ_เพ_ยง.png"},
+{name:"นางรัศมี สืบบุตร",image:"https://i.postimg.cc/sD6j1qJb/พ_หม.png"},
+{name:"นางสาวพิชญ์ชญานิษฐ์ นิตอินทร์",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png"},
+{name:"นางสาววรุณรัตน์ ชนะศรีรัตนกุล",image:"https://i.postimg.cc/DyVQHpsZ/เจ_เก_ง.png"},
+{name:"นางสาววันวิสาข์ บุญมาศ",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png"},
+{name:"นางสาวจุติมา สมบูรณ์",image:"https://i.postimg.cc/DyjvmHcp/พ_ทรายแก_ไข.jpg"},
+{name:"นางสาวฤทัยทิพย์ ดวงศรี",image:"https://i.postimg.cc/3JS8WVZP/พ_เหม_ยว.png"},
+{name:"นายธีระศักดิ์ การแก้ว",image:"https://i.postimg.cc/3JS8WVZq/พ_ธ_ร.jpg"},
+{name:"นางสาวจันทร์จิรา จันทร์สว่าง",image:"https://i.postimg.cc/Fstb8Cc1/จ_นทร_จ_รา_ตต.jpg"},
+{name:"นางสาวเบญจวรรณ อ่อนอรรถ",image:"https://i.postimg.cc/9F3PKgTw/พ_เอ_เบญจวรรณ.png"},
+{name:"นายแพทย์ชัยพร  บุญศรี",image:"https://i.postimg.cc/Dzby9612/74711.jpg"},
+{name:"แพทย์หญิงวรรษพร  อมรไชย",image:"https://i.postimg.cc/CKfL37bh/74708.jpg"}
+];
+
+
+
+
+
+
+const nameList=document.getElementById("nameList");
+staffDirectory.forEach(s=>{
+const opt=document.createElement("option");
+opt.value=s.name;
+nameList.appendChild(opt);
+});
+
+let data=JSON.parse(localStorage.getItem("shiftData"))||[];
+
+function save(){
+localStorage.setItem("shiftData",JSON.stringify(data));
+}
+
+function addItem(){
+const shift=document.getElementById("shift").value;
+const name=document.getElementById("name").value;
+const position=document.getElementById("position").value;
+
+if(!name || !position){
+alert("กรุณากรอกชื่อและตำแหน่ง");
+return;
+}
+
+data.push({shift,name,position});
+save();
+render();
+document.getElementById("notifySound").play();
+document.getElementById("name").value="";
+}
+
+function removeItem(index){
+data.splice(index,1);
+save();
+render();
+}
+
+function render(){
+["morning","afternoon","night"].forEach(s=>{
+document.getElementById(s).innerHTML="";
+});
+
+let counts={morning:0,afternoon:0,night:0};
+
+data.forEach((item,index)=>{
+counts[item.shift]++;
+const person=staffDirectory.find(s=>s.name===item.name);
+
+const div=document.createElement("div");
+div.className="card";
+
+div.innerHTML=`
+<img src="${person?person.image:''}">
+<strong>${item.name}</strong>
+<span class="badge ${item.position.replace(/\s/g,'')}">${item.position}</span>
+<div class="delete" onclick="removeItem(${index})">ลบ</div>
+`;
+
+document.getElementById(item.shift).appendChild(div);
+});
+
+document.getElementById("morningCount").textContent=counts.morning;
+document.getElementById("afternoonCount").textContent=counts.afternoon;
+document.getElementById("nightCount").textContent=counts.night;
+document.getElementById("totalCount").textContent=data.length;
+}
+
+function updateClock(){
+const now=new Date();
+document.getElementById("time").textContent=
+now.toLocaleTimeString("th-TH",{hour12:false});
+document.getElementById("date").textContent=
+now.toLocaleDateString("th-TH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
+}
+
+setInterval(updateClock,1000);
+updateClock();
+render();
+
+</script>
+
+</body>
+</html>
