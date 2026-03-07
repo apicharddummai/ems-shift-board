@@ -13,9 +13,9 @@ margin:0;
 background:#f4f7f9;
 color:#2c3e50;
 padding-top: 5px;
-/* เพิ่ม CSS ป้องกันการคลุมดำข้อความเพื่อก๊อปปี้ */
+/* ป้องกันการลากคลุมข้อความ */
 -webkit-user-select: none;  
--moz-user-select: none;     
+-moz-user-select: none;      
 -ms-user-select: none;      
 user-select: none;
 }
@@ -145,7 +145,19 @@ padding-bottom: 5px;
 .shift-afternoon { border: 1px solid #e67e22; border-left: 8px solid #e67e22; background: #fff8f2; }
 
 .shift h3{ margin:0 0 10px 0; display:flex; justify-content:space-between; align-items:center; font-size:15px; }
+
+/* ส่วนแสดงผลจำนวนคนและถังขยะ */
+.count-group { display: flex; align-items: center; gap: 8px; }
 .count{ background:#2f6df6; color:white; padding:2px 10px; border-radius:12px; font-size:12px; }
+
+.delete-shift-icon {
+    color: #e74c3c;
+    cursor: pointer;
+    font-size: 18px;
+    transition: transform 0.2s;
+    user-select: none;
+}
+.delete-shift-icon:hover { transform: scale(1.2); color: #c0392b; }
 
 .shift-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
 
@@ -161,7 +173,8 @@ text-align:center;
 box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 }
 
-.card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:5px; border: 2px solid #f0f2f5; }
+/* เพิ่ม pointer-events: none เพื่อให้รูปไม่ตอบสนองต่อการคลิกขวา */
+.card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:5px; border: 2px solid #f0f2f5; pointer-events: none; }
 .card strong{ font-size:11px; height: 30px; overflow: hidden; line-height: 1.2; display:block; color: #34495e; }
 
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:4px; width: 100%; text-transform: uppercase; }
@@ -180,7 +193,8 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 </style>
 </head>
 
-<body oncontextmenu="return false;"> <div class="header">
+<body> 
+<div class="header">
 <img src="https://i.postimg.cc/tgMz7SVd/sphch.png" alt="Logo Left">
 <div class="header-center">
 <h2>หน้าที่เวรประจำวัน ศูนย์รับแจ้งเหตุและสั่งการ จังหวัดอุบลราชธานี</h2>
@@ -233,15 +247,33 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 
     <div class="shift-stack">
         <div class="shift shift-night">
-            <h3>🌙 เวรดึก 24.00 น. - 08.00 น. <span class="count" id="nightCount">0</span></h3>
+            <h3>
+                <span>🌙 เวรดึก 24.00 น. - 08.00 น.</span>
+                <div class="count-group">
+                    <span class="count" id="nightCount">0</span>
+                    <span class="delete-shift-icon" onclick="clearShift('night')" title="ลบเฉพาะเวรดึก">&#128465;</span>
+                </div>
+            </h3>
             <div id="night" class="shift-grid"></div>
         </div>
         <div class="shift shift-morning">
-            <h3>☀️ เวรเช้า 08.00 น. - 16.00 น. <span class="count" id="morningCount">0</span></h3>
+            <h3>
+                <span>☀️ เวรเช้า 08.00 น. - 16.00 น.</span>
+                <div class="count-group">
+                    <span class="count" id="morningCount">0</span>
+                    <span class="delete-shift-icon" onclick="clearShift('morning')" title="ลบเฉพาะเวรเช้า">&#128465;</span>
+                </div>
+            </h3>
             <div id="morning" class="shift-grid"></div>
         </div>
         <div class="shift shift-afternoon">
-            <h3>🌤️ เวรบ่าย 16.00 น. - 24.00 น. <span class="count" id="afternoonCount">0</span></h3>
+            <h3>
+                <span>🌤️ เวรบ่าย 16.00 น. - 24.00 น.</span>
+                <div class="count-group">
+                    <span class="count" id="afternoonCount">0</span>
+                    <span class="delete-shift-icon" onclick="clearShift('afternoon')" title="ลบเฉพาะเวรบ่าย">&#128465;</span>
+                </div>
+            </h3>
             <div id="afternoon" class="shift-grid"></div>
         </div>
     </div>
@@ -252,16 +284,25 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 </audio>
 
 <script>
-/** * ระบบป้องกันการก๊อปปี้ 
- **/
-// ปิดปุ่มลัด F12, Ctrl+U (View Source), Ctrl+Shift+I (Inspect)
-document.onkeydown = function(e) {
-    if (e.keyCode == 123) return false; // F12
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'C'.charCodeAt(0)) return false;
-    if (e.ctrlKey && e.shiftKey && e.keyCode == 'J'.charCodeAt(0)) return false;
-    if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) return false; // Ctrl+U
-};
+/** * ระบบป้องกันความปลอดภัยขั้นสูง (คลิกขวา/ปุ่มลัด/การก๊อปปี้)
+ */
+// 1. ป้องกันการคลิกขวาที่ระดับ document (แก้ปัญหาคลิกที่รูปแล้วขึ้นเมนู)
+document.addEventListener('contextmenu', e => e.preventDefault());
+
+// 2. ป้องกันปุ่มลัดครอบคลุม F12, Ctrl+U, Inspect
+document.addEventListener('keydown', function(e) {
+    if (
+        e.keyCode === 123 || // F12
+        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
+        (e.ctrlKey && e.shiftKey && e.keyCode === 67) || // Ctrl+Shift+C
+        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
+        (e.ctrlKey && e.keyCode === 85) ||               // Ctrl+U
+        (e.ctrlKey && e.keyCode === 83)                  // Ctrl+S
+    ) {
+        e.preventDefault();
+        return false;
+    }
+});
 
 const staffDirectory = [
 {name:"นายวิระบูรณ์ แก่นภักดี",image:"https://i.postimg.cc/P51vs6dR/ว_ระบ_รณ.jpg"},
@@ -339,6 +380,18 @@ function addItem(){
 }
 
 function removeItem(index){ data.splice(index,1); save(); render(); }
+
+function clearShift(shiftValue) {
+    const shiftNames = { 'night': 'เวรดึก', 'morning': 'เวรเช้า', 'afternoon': 'เวรบ่าย' };
+    if(confirm(`ยืนยันการลบรายชื่อทั้งหมดใน "${shiftNames[shiftValue]}" หรือไม่?`)) {
+        data = data.filter(item => {
+            if(item.position === "DOC" || item.position === "SUPERVISOR" || item.position === "EMD") return true;
+            return item.shift !== shiftValue;
+        });
+        save();
+        render();
+    }
+}
 
 function render(){
     const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area"];
