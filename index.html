@@ -3,192 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EMS Shift Board - Modern Compact</title>
+<title>EMS Shift Board - Firebase Realtime</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+
 <style>
+/* --- สไตล์คงเดิมตามโค้ดต้นฉบับของคุณ --- */
 *{font-family:Sarabun, sans-serif;box-sizing:border-box}
-
-body{
-margin:0;
-background:#f4f7f9;
-color:#2c3e50;
-padding-top: 5px;
-/* ป้องกันการลากคลุมข้อความ */
--webkit-user-select: none;  
--moz-user-select: none;      
--ms-user-select: none;      
-user-select: none;
-}
-
-/* --- HEADER DESIGN --- */
-.header{
-display:flex;
-align-items:center;
-justify-content:space-between;
-padding:10px 30px;
-background: white;
-box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-border-bottom: 2px solid #2f6df6;
-}
-
+body{margin:0;background:#f4f7f9;color:#2c3e50;padding-top: 5px;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 30px;background: white;box-shadow: 0 2px 10px rgba(0,0,0,0.05);border-bottom: 2px solid #2f6df6;}
 .header img{height:45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));}
-.header-center h2{
-font-size:18px;
-margin:0 0 5px 0;
-color: #1a2a6c;
-text-transform: uppercase;
-letter-spacing: 0.5px;
-}
-
-.clock-container {
-display: flex;
-flex-direction: column;
-align-items: center;
-background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);
-padding: 8px 25px;
-border-radius: 12px;
-border: 1px solid #d1d9e6;
-box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 6px rgba(0,0,0,0.05);
-min-width: 300px;
-}
-
+.header-center h2{font-size:18px;margin:0 0 5px 0;color: #1a2a6c;text-transform: uppercase;letter-spacing: 0.5px;}
+.clock-container {display: flex;flex-direction: column;align-items: center;background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);padding: 8px 25px;border-radius: 12px;border: 1px solid #d1d9e6;box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 6px rgba(0,0,0,0.05);min-width: 300px;}
 #date { font-size: 12px; color: #5e6d82; font-weight: 400; }
-#time { 
-    font-size: 24px; 
-    font-weight: 700; 
-    color: #2f6df6; 
-    letter-spacing: 1px;
-    margin-top: -2px;
-}
-
-/* --- FORM SECTION --- */
-.form-box{
-background: white;
-padding:12px;
-margin:10px auto;
-border-radius:10px;
-max-width:1380px;
-display: grid;
-grid-template-columns: 1.2fr 1.5fr 1.2fr 0.6fr 0.6fr 0.8fr;
-gap: 10px;
-align-items: center;
-box-shadow: 0 4px 6px rgba(0,0,0,0.03);
-}
-
-input, select, button, .total-box {
-height: 42px;
-font-size: 14px;
-border-radius: 8px;
-border: 1px solid #ced4da;
-padding: 0 12px;
-width: 100%;
-transition: all 0.2s;
-}
-
-input:focus, select:focus {
-border-color: #2f6df6;
-outline: none;
-box-shadow: 0 0 0 3px rgba(47, 109, 246, 0.1);
-}
-
+#time { font-size: 24px; font-weight: 700; color: #2f6df6; letter-spacing: 1px; margin-top: -2px;}
+.form-box{background: white;padding:12px;margin:10px auto;border-radius:10px;max-width:1380px;display: grid;grid-template-columns: 1.2fr 1.5fr 1.2fr 0.6fr 0.6fr 0.8fr;gap: 10px;align-items: center;box-shadow: 0 4px 6px rgba(0,0,0,0.03);}
+input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8px;border: 1px solid #ced4da;padding: 0 12px;width: 100%;transition: all 0.2s;}
+input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0 3px rgba(47, 109, 246, 0.1);}
 .add-btn { background: #2f6df6; color: white; border: none; font-weight: 600; cursor: pointer; }
 .add-btn:hover { background: #1a56db; transform: translateY(-1px); }
-
 .clear-btn { background: white; color: #e74c3c; border: 1px solid #e74c3c; font-weight: 600; cursor: pointer; }
 .clear-btn:hover { background: #fff5f5; }
-
-.total-box {
-background: #eef3ff;
-border: 1px solid #2f6df6;
-color: #2f6df6;
-display: flex;
-align-items: center;
-justify-content: center;
-font-weight: 700;
-}
-
-/* --- CONTAINER & CARDS --- */
-.container{
-max-width:1400px;
-margin:auto;
-padding:0 15px 15px 15px;
-display: flex;
-flex-direction: column;
-gap: 10px;
-}
-
-.top-management {
-display: grid;
-grid-template-columns: 0.8fr 1.2fr;
-gap: 10px;
-}
-
-.management-box {
-background: #ffffff;
-padding: 10px;
-border-radius: 10px;
-border: 1.5px solid #2f6df6;
-}
-
-.management-box h3 {
-margin: 0 0 8px 0;
-font-size: 14px;
-color: #2f6df6;
-border-bottom: 1px solid #eee;
-padding-bottom: 5px;
-}
-
+.total-box {background: #eef3ff;border: 1px solid #2f6df6;color: #2f6df6;display: flex;align-items: center;justify-content: center;font-weight: 700;}
+.container{max-width:1400px;margin:auto;padding:0 15px 15px 15px;display: flex;flex-direction: column;gap: 10px;}
+.top-management {display: grid;grid-template-columns: 0.8fr 1.2fr;gap: 10px;}
+.management-box {background: #ffffff;padding: 10px;border-radius: 10px;border: 1.5px solid #2f6df6;}
+.management-box h3 {margin: 0 0 8px 0;font-size: 14px;color: #2f6df6;border-bottom: 1px solid #eee;padding-bottom: 5px;}
 .shift-stack { display: flex; flex-direction: column; gap: 10px; }
 .shift{ background:white; padding:10px; border-radius:10px; border-left: 6px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
 .shift-night { border: 1px solid #f1c40f; border-left: 8px solid #f1c40f; background: #fffdf2; }
 .shift-morning { border: 1px solid #3498db; border-left: 8px solid #3498db; background: #f0f8ff; }
 .shift-afternoon { border: 1px solid #e67e22; border-left: 8px solid #e67e22; background: #fff8f2; }
-
 .shift h3{ margin:0 0 10px 0; display:flex; justify-content:space-between; align-items:center; font-size:15px; }
-
-/* ส่วนแสดงผลจำนวนคนและถังขยะ */
 .count-group { display: flex; align-items: center; gap: 8px; }
 .count{ background:#2f6df6; color:white; padding:2px 10px; border-radius:12px; font-size:12px; }
-
-.delete-shift-icon {
-    color: #e74c3c;
-    cursor: pointer;
-    font-size: 18px;
-    transition: transform 0.2s;
-    user-select: none;
-}
+.delete-shift-icon {color: #e74c3c;cursor: pointer;font-size: 18px;transition: transform 0.2s;user-select: none;}
 .delete-shift-icon:hover { transform: scale(1.2); color: #c0392b; }
-
 .shift-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:8px; }
-
-.card{
-background:#fff;
-border:1px solid #eaedf2;
-border-radius:8px;
-padding:8px;
-display:flex;
-flex-direction:column;
-align-items:center;
-text-align:center;
-box-shadow: 0 2px 4px rgba(0,0,0,0.02);
-}
-
-/* เพิ่ม pointer-events: none เพื่อให้รูปไม่ตอบสนองต่อการคลิกขวา */
+.card{background:#fff;border:1px solid #eaedf2;border-radius:8px;padding:8px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow: 0 2px 4px rgba(0,0,0,0.02);}
 .card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:5px; border: 2px solid #f0f2f5; pointer-events: none; }
 .card strong{ font-size:11px; height: 30px; overflow: hidden; line-height: 1.2; display:block; color: #34495e; }
-
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:4px; width: 100%; text-transform: uppercase; }
-.CALLTAKER{background:#4da3ff;}
-.CASEINTAKE{background:#2ecc71;}
-.COORDINATOR{background:#f39c12;}
-.DOC{background:#9b59b6;}
-.EMD{background:#e67e22;}
-.SUPERVISOR{background:#f1c40f;color:black;}
-.IT{background:#7f8c8d;}
-
+.CALLTAKER{background:#4da3ff;} .CASEINTAKE{background:#2ecc71;} .COORDINATOR{background:#f39c12;} .DOC{background:#9b59b6;} .EMD{background:#e67e22;} .SUPERVISOR{background:#f1c40f;color:black;} .IT{background:#7f8c8d;}
 .delete{margin-top:5px; font-size:10px; color:#c0392b; cursor:pointer; opacity: 0.6;}
 .delete:hover{opacity: 1;}
-
 @media (max-width: 1000px) { .form-box { grid-template-columns: 1fr 1fr; } }
 </style>
 </head>
@@ -284,23 +144,27 @@ box-shadow: 0 2px 4px rgba(0,0,0,0.02);
 </audio>
 
 <script>
-/** * ระบบป้องกันความปลอดภัยขั้นสูง (คลิกขวา/ปุ่มลัด/การก๊อปปี้)
- */
-// 1. ป้องกันการคลิกขวาที่ระดับ document (แก้ปัญหาคลิกที่รูปแล้วขึ้นเมนู)
-document.addEventListener('contextmenu', e => e.preventDefault());
+// 2. Firebase Configuration (จากที่คุณส่งมา)
+const firebaseConfig = {
+  apiKey: "AIzaSyB3FFIiFgr6L3Er4SNFgrWEpmF6MD1BvFM",
+  authDomain: "ems-shift-board.firebaseapp.com",
+  projectId: "ems-shift-board",
+  storageBucket: "ems-shift-board.firebasestorage.app",
+  messagingSenderId: "464875316317",
+  appId: "1:464875316317:web:2c4ccdf6b5760579b099b4",
+  measurementId: "G-GVN7WYJPS2",
+  databaseURL: "https://ems-shift-board-default-rtdb.asia-southeast1.firebasedatabase.app" // เพิ่ม URL Database
+};
 
-// 2. ป้องกันปุ่มลัดครอบคลุม F12, Ctrl+U, Inspect
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+const db = firebase.database();
+
+// ป้องกันการคลิกขวา/ปุ่มลัด
+document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', function(e) {
-    if (
-        e.keyCode === 123 || // F12
-        (e.ctrlKey && e.shiftKey && e.keyCode === 73) || // Ctrl+Shift+I
-        (e.ctrlKey && e.shiftKey && e.keyCode === 67) || // Ctrl+Shift+C
-        (e.ctrlKey && e.shiftKey && e.keyCode === 74) || // Ctrl+Shift+J
-        (e.ctrlKey && e.keyCode === 85) ||               // Ctrl+U
-        (e.ctrlKey && e.keyCode === 83)                  // Ctrl+S
-    ) {
-        e.preventDefault();
-        return false;
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) {
+        e.preventDefault(); return false;
     }
 });
 
@@ -358,14 +222,20 @@ const staffDirectory = [
 
 const nameList=document.getElementById("nameList");
 staffDirectory.forEach(s=>{
-    const opt=document.createElement("option");
-    opt.value=s.name;
-    nameList.appendChild(opt);
+    const opt=document.createElement("option"); opt.value=s.name; nameList.appendChild(opt);
 });
 
-let data=JSON.parse(localStorage.getItem("shiftData"))||[];
+let data = [];
 
-function save(){ localStorage.setItem("shiftData",JSON.stringify(data)); }
+// ดึงข้อมูลจาก Firebase แบบ Real-time
+db.ref('shiftData').on('value', (snapshot) => {
+    data = snapshot.val() || [];
+    render();
+});
+
+function syncData() {
+    db.ref('shiftData').set(data);
+}
 
 function addItem(){
     const shift=document.getElementById("shift").value;
@@ -373,13 +243,12 @@ function addItem(){
     const position=document.getElementById("position").value;
     if(!name || !position){ alert("กรุณากรอกชื่อและตำแหน่ง"); return; }
     data.push({shift,name,position});
-    save();
-    render();
+    syncData();
     document.getElementById("notifySound").play();
     document.getElementById("name").value="";
 }
 
-function removeItem(index){ data.splice(index,1); save(); render(); }
+function removeItem(index){ data.splice(index,1); syncData(); }
 
 function clearShift(shiftValue) {
     const shiftNames = { 'night': 'เวรดึก', 'morning': 'เวรเช้า', 'afternoon': 'เวรบ่าย' };
@@ -388,8 +257,7 @@ function clearShift(shiftValue) {
             if(item.position === "DOC" || item.position === "SUPERVISOR" || item.position === "EMD") return true;
             return item.shift !== shiftValue;
         });
-        save();
-        render();
+        syncData();
     }
 }
 
@@ -424,10 +292,9 @@ function updateClock(){
 }
 setInterval(updateClock,1000);
 updateClock();
-render();
 
 function clearAll(){
-    if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; save(); render(); }
+    if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); }
 }
 </script>
 </body>
