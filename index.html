@@ -29,42 +29,39 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 .total-box {background: #eef3ff;border: 1px solid #2f6df6;color: #2f6df6;display: flex;align-items: center;justify-content: center;font-weight: 700;}
 .container{max-width:1400px;margin:auto;padding:0 15px 15px 15px;display: flex;flex-direction: column;gap: 10px;}
 
-/* แก้ไขจุดนี้: ปรับขนาดช่อง IT ให้เล็กพิเศษสำหรับ 1 คน */
 .top-management {display: grid;grid-template-columns: 0.8fr 1.2fr 0.4fr;gap: 10px;}
-#it-area .card { max-width: 120px; margin: auto; } /* คุมไม่ให้การ์ดบวมเกินไป */
+#it-area .card { max-width: 120px; margin: auto; }
 
 .management-box {background: #ffffff;padding: 10px;border-radius: 10px;border: 1.5px solid #2f6df6;}
 
-/* สั่งให้พื้นที่แสดงผลของการ์ดด้านบน จัดของไว้ตรงกลาง */
 .management-box .shift-grid {
-    display: flex;            /* ใช้ flex แทน grid เพื่อจัดกลางง่ายขึ้น */
-    flex-wrap: wrap;          /* ถ้าคนเยอะให้ลงแถวใหม่ */
-    justify-content: center;   /* จัดการ์ดไว้ตรงกลางแนวนอน */
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
     gap: 8px;
 }
 
-/* ล็อกความกว้างการ์ดด้านบนไม่ให้บวม */
 .management-box .card {
-    width: 130px; 
-    flex: 0 1 auto;           /* ป้องกันการขยายตัวจนเต็มช่อง */
+    width: 130px;
+    flex: 0 1 auto;
 }
 
-/* หาจุดนี้ในโค้ดเดิมของคุณ */
 .management-box h3 {
     margin: 0 0 8px 0;
     font-size: 14px;
     color: #2f6df6;
     border-bottom: 1px solid #eee;
     padding-bottom: 5px;
-    
-    /* เพิ่มบรรทัดนี้เข้าไปครับ */
     text-align: center; 
 }
 .shift-stack { display: flex; flex-direction: column; gap: 10px; }
+
 .shift{ background:white; padding:10px; border-radius:10px; border-left: 6px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
-.shift-night { border: 1px solid #f1c40f; border-left: 8px solid #f1c40f; background: #fffdf2; }
-.shift-morning { border: 1px solid #3498db; border-left: 8px solid #3498db; background: #f0f8ff; }
+
+.shift-night { border: 1px solid #1a1c23; border-left: 8px solid #1a1c23; background: #fffdf2; }
+.shift-morning { border: 1px solid #f1c40f; border-left: 8px solid #f1c40f; background: #fffdf2; }
 .shift-afternoon { border: 1px solid #e67e22; border-left: 8px solid #e67e22; background: #fff8f2; }
+
 .shift h3{ margin:0 0 10px 0; display:flex; justify-content:space-between; align-items:center; font-size:15px; }
 .count-group { display: flex; align-items: center; gap: 8px; }
 .count{ background:#2f6df6; color:white; padding:2px 10px; border-radius:12px; font-size:12px; }
@@ -177,7 +174,6 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 </audio>
 
 <script>
-// --- JavaScript คงเดิมทั้งหมดตามไฟล์ที่คุณส่งมา ---
 const firebaseConfig = {
   apiKey: "AIzaSyB3FFIiFgr6L3Er4SNFgrWEpmF6MD1BvFM",
   authDomain: "ems-shift-board.firebaseapp.com",
@@ -238,7 +234,7 @@ const staffDirectory = [
 {name:"นางอินทิรา นิธิวัฒนพงษ์",image:"https://i.postimg.cc/28pdM9vb/พ_ต_อ_นท_รา.webp"},
 {name:"นายอุดม พงษ์พิละ",image:"https://i.postimg.cc/rFFyVM5v/asdasd.png"},
 {name:"น.ส.ทิพยวัลย์ สุทธาคง",image:"https://i.postimg.cc/wTK5Z4JN/พ_ว_ลย_พ_หน_ง.jpg"},
-{name:"น.ส.เบ็ญจวรรณ พรมบุตร",image:"https://i.postimg.cc/wTh5p5cL/พ_เอ_เบ_ญ.png"},
+{name:"น.S.เบ็ญจวรรณ พรมบุตร",image:"https://i.postimg.cc/wTh5p5cL/พ_เอ_เบ_ญ.png"},
 {name:"นายคม พันเพียง",image:"https://i.postimg.cc/xTrGhpH1/ค_ณชายคม_พ_นธ_เพ_ยง.png"},
 {name:"นางรัศมี สืบบุตร",image:"https://i.postimg.cc/sD6j1qJb/พ_หม.png"},
 {name:"น.ส.วรุณรัตน์ ชนะศรีรัตนกุล",image:"https://i.postimg.cc/DyVQHpsZ/เจ_เก_ง.png"},
@@ -292,21 +288,43 @@ function render(){
     const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area","it-area"];
     areas.forEach(a => document.getElementById(a).innerHTML = "");
     let counts={morning:0,afternoon:0,night:0};
+    
     data.forEach((item,index)=>{
         const person=staffDirectory.find(s=>s.name===item.name);
         const div=document.createElement("div");
         div.className="card";
+
+        // --- ส่วนที่กำหนดสีขอบตามตำแหน่งและเวร ---
+        if (item.position === "DOC" || item.position === "SUPERVISOR" || item.position === "EMD") {
+            // แพทย์ พยาบาล ผู้จ่ายงาน -> ขอบน้ำเงิน
+            div.style.border = "2.5px solid #2f6df6";
+        } else if (item.position === "IT") {
+            // ไอที -> ขอบเทาเข้ม
+            div.style.border = "2.5px solid #455a64";
+        } else {
+            // ตำแหน่งอื่นๆ -> ขอบตามเวร
+            const shiftColors = { 'morning': '#f1c40f', 'afternoon': '#e67e22', 'night': '#1a1c23' };
+            if (shiftColors[item.shift]) {
+                div.style.border = `2.5px solid ${shiftColors[item.shift]}`;
+            }
+        }
+
         div.innerHTML=`
             <img src="${person?person.image:''}">
             <strong>${item.name}</strong>
             <span class="badge ${item.position.replace(/\s/g,'')}">${item.position}</span>
             <div class="delete" onclick="removeItem(${index})">ลบออก</div>
         `;
+
         if(item.position === "DOC") document.getElementById("doctor-area").appendChild(div);
         else if(item.position === "SUPERVISOR" || item.position === "EMD") document.getElementById("nurse-emd-area").appendChild(div);
         else if(item.position === "IT") document.getElementById("it-area").appendChild(div);
-        else { counts[item.shift]++; document.getElementById(item.shift).appendChild(div); }
+        else { 
+            counts[item.shift]++; 
+            document.getElementById(item.shift).appendChild(div); 
+        }
     });
+
     document.getElementById("morningCount").textContent=counts.morning;
     document.getElementById("afternoonCount").textContent=counts.afternoon;
     document.getElementById("nightCount").textContent=counts.night;
