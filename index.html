@@ -28,9 +28,38 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 .clear-btn:hover { background: #fff5f5; }
 .total-box {background: #eef3ff;border: 1px solid #2f6df6;color: #2f6df6;display: flex;align-items: center;justify-content: center;font-weight: 700;}
 .container{max-width:1400px;margin:auto;padding:0 15px 15px 15px;display: flex;flex-direction: column;gap: 10px;}
-.top-management {display: grid;grid-template-columns: 0.8fr 1.2fr;gap: 10px;}
+
+/* แก้ไขจุดนี้: ปรับขนาดช่อง IT ให้เล็กพิเศษสำหรับ 1 คน */
+.top-management {display: grid;grid-template-columns: 0.8fr 1.2fr 0.4fr;gap: 10px;}
+#it-area .card { max-width: 120px; margin: auto; } /* คุมไม่ให้การ์ดบวมเกินไป */
+
 .management-box {background: #ffffff;padding: 10px;border-radius: 10px;border: 1.5px solid #2f6df6;}
-.management-box h3 {margin: 0 0 8px 0;font-size: 14px;color: #2f6df6;border-bottom: 1px solid #eee;padding-bottom: 5px;}
+
+/* สั่งให้พื้นที่แสดงผลของการ์ดด้านบน จัดของไว้ตรงกลาง */
+.management-box .shift-grid {
+    display: flex;            /* ใช้ flex แทน grid เพื่อจัดกลางง่ายขึ้น */
+    flex-wrap: wrap;          /* ถ้าคนเยอะให้ลงแถวใหม่ */
+    justify-content: center;   /* จัดการ์ดไว้ตรงกลางแนวนอน */
+    gap: 8px;
+}
+
+/* ล็อกความกว้างการ์ดด้านบนไม่ให้บวม */
+.management-box .card {
+    width: 130px; 
+    flex: 0 1 auto;           /* ป้องกันการขยายตัวจนเต็มช่อง */
+}
+
+/* หาจุดนี้ในโค้ดเดิมของคุณ */
+.management-box h3 {
+    margin: 0 0 8px 0;
+    font-size: 14px;
+    color: #2f6df6;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 5px;
+    
+    /* เพิ่มบรรทัดนี้เข้าไปครับ */
+    text-align: center; 
+}
 .shift-stack { display: flex; flex-direction: column; gap: 10px; }
 .shift{ background:white; padding:10px; border-radius:10px; border-left: 6px solid #ccc; box-shadow: 0 2px 4px rgba(0,0,0,0.04); }
 .shift-night { border: 1px solid #f1c40f; border-left: 8px solid #f1c40f; background: #fffdf2; }
@@ -46,10 +75,10 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 .card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:5px; border: 2px solid #f0f2f5; pointer-events: none; }
 .card strong{ font-size:11px; height: 30px; overflow: hidden; line-height: 1.2; display:block; color: #34495e; }
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:4px; width: 100%; text-transform: uppercase; }
-.CALLTAKER{background:#4da3ff;} .CASEINTAKE{background:#2ecc71;} .COORDINATOR{background:#f39c12;} .DOC{background:#9b59b6;} .EMD{background:#e67e22;} .SUPERVISOR{background:#f1c40f;color:black;} .IT{background:#7f8c8d;}
+.CALLTAKER{background:#4da3ff;} .CASEINTAKE{background:#2ecc71;} .COORDINATOR{background:#f39c12;} .DOC{background:#9b59b6;} .EMD{background:#e67e22;} .SUPERVISOR{background:#f1c40f;color:black;} .IT{background:#455a64;}
 .delete{margin-top:5px; font-size:10px; color:#c0392b; cursor:pointer; opacity: 0.6;}
 .delete:hover{opacity: 1;}
-@media (max-width: 1000px) { .form-box { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 1000px) { .form-box { grid-template-columns: 1fr 1fr; } .top-management { grid-template-columns: 1fr; } }
 </style>
 </head>
 
@@ -81,10 +110,10 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 <option value="DOC">👨‍⚕️ แพทย์เวร (DOC)</option>
 <option value="SUPERVISOR">👩‍⚕️ พยาบาลเวร (SUP)</option>
 <option value="EMD">📟 ผู้จ่ายงาน (EMD)</option>
+<option value="IT">💻 เจ้าหน้าที่คอมพิวเตอร์ (IT)</option>
 <option>CALL TAKER</option>
 <option>CASE INTAKE</option>
 <option>COORDINATOR</option>
-<option>IT</option>
 </select>
 
 <button class="add-btn" onclick="addItem()">+ เพิ่มรายชื่อ</button>
@@ -102,6 +131,10 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
         <div class="management-box">
             <h3>👩‍⚕️ พยาบาลควบคุมกำกับ & ผู้จ่ายงาน (SUP/EMD)</h3>
             <div id="nurse-emd-area" class="shift-grid"></div>
+        </div>
+        <div class="management-box">
+            <h3>💻 เจ้าหน้าที่คอมพิวเตอร์ (IT)</h3>
+            <div id="it-area" class="shift-grid"></div>
         </div>
     </div>
 
@@ -144,7 +177,7 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 </audio>
 
 <script>
-// 2. Firebase Configuration (จากที่คุณส่งมา)
+// --- JavaScript คงเดิมทั้งหมดตามไฟล์ที่คุณส่งมา ---
 const firebaseConfig = {
   apiKey: "AIzaSyB3FFIiFgr6L3Er4SNFgrWEpmF6MD1BvFM",
   authDomain: "ems-shift-board.firebaseapp.com",
@@ -153,14 +186,12 @@ const firebaseConfig = {
   messagingSenderId: "464875316317",
   appId: "1:464875316317:web:2c4ccdf6b5760579b099b4",
   measurementId: "G-GVN7WYJPS2",
-  databaseURL: "https://ems-shift-board-default-rtdb.asia-southeast1.firebasedatabase.app" // เพิ่ม URL Database
+  databaseURL: "https://ems-shift-board-default-rtdb.asia-southeast1.firebasedatabase.app"
 };
 
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig);
 const db = firebase.database();
 
-// ป้องกันการคลิกขวา/ปุ่มลัด
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', function(e) {
     if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) {
@@ -226,16 +257,12 @@ staffDirectory.forEach(s=>{
 });
 
 let data = [];
-
-// ดึงข้อมูลจาก Firebase แบบ Real-time
 db.ref('shiftData').on('value', (snapshot) => {
     data = snapshot.val() || [];
     render();
 });
 
-function syncData() {
-    db.ref('shiftData').set(data);
-}
+function syncData() { db.ref('shiftData').set(data); }
 
 function addItem(){
     const shift=document.getElementById("shift").value;
@@ -254,7 +281,7 @@ function clearShift(shiftValue) {
     const shiftNames = { 'night': 'เวรดึก', 'morning': 'เวรเช้า', 'afternoon': 'เวรบ่าย' };
     if(confirm(`ยืนยันการลบรายชื่อทั้งหมดใน "${shiftNames[shiftValue]}" หรือไม่?`)) {
         data = data.filter(item => {
-            if(item.position === "DOC" || item.position === "SUPERVISOR" || item.position === "EMD") return true;
+            if(item.position === "DOC" || item.position === "SUPERVISOR" || item.position === "EMD" || item.position === "IT") return true;
             return item.shift !== shiftValue;
         });
         syncData();
@@ -262,7 +289,7 @@ function clearShift(shiftValue) {
 }
 
 function render(){
-    const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area"];
+    const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area","it-area"];
     areas.forEach(a => document.getElementById(a).innerHTML = "");
     let counts={morning:0,afternoon:0,night:0};
     data.forEach((item,index)=>{
@@ -277,6 +304,7 @@ function render(){
         `;
         if(item.position === "DOC") document.getElementById("doctor-area").appendChild(div);
         else if(item.position === "SUPERVISOR" || item.position === "EMD") document.getElementById("nurse-emd-area").appendChild(div);
+        else if(item.position === "IT") document.getElementById("it-area").appendChild(div);
         else { counts[item.shift]++; document.getElementById(item.shift).appendChild(div); }
     });
     document.getElementById("morningCount").textContent=counts.morning;
@@ -293,9 +321,7 @@ function updateClock(){
 setInterval(updateClock,1000);
 updateClock();
 
-function clearAll(){
-    if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); }
-}
+function clearAll(){ if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); } }
 </script>
 </body>
 </html>
