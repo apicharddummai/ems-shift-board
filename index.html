@@ -305,9 +305,13 @@ function showContact(name) {
         cancelButtonColor: '#28a745',
         reverseButtons: true
     }).then((result) => {
-        if (result.dismiss === Swal.DismissReason.cancel) {
-            window.location.href = `tel:${phoneNumber}`;
-        }
+        // เปลี่ยนจาก window.location.href เป็นแบบนี้ครับ
+if (result.dismiss === Swal.DismissReason.cancel) {
+    const telWindow = window.open(`tel:${phoneNumber}`, '_blank');
+    if (telWindow) {
+        setTimeout(() => telWindow.close(), 500); // เปิดแล้วปิดแท็บใหม่ทันทีเพื่อให้ OS เรียกแอปโทรศัพท์
+    }
+}
     });
 }
 
