@@ -306,11 +306,10 @@ function showContact(name) {
         reverseButtons: true
     }).then((result) => {
         // เปลี่ยนจาก window.location.href เป็นแบบนี้ครับ
+// ค้นหาบรรทัดนี้ในโค้ดเดิมของคุณ
 if (result.dismiss === Swal.DismissReason.cancel) {
-    const telWindow = window.open(`tel:${phoneNumber}`, '_blank');
-    if (telWindow) {
-        setTimeout(() => telWindow.close(), 500); // เปิดแล้วปิดแท็บใหม่ทันทีเพื่อให้ OS เรียกแอปโทรศัพท์
-    }
+    // แก้ไขเป็นบรรทัดข้างล่างนี้ครับ
+    window.location.assign(`tel:${phoneNumber}`); 
 }
     });
 }
