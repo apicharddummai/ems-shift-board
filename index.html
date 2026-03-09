@@ -61,7 +61,7 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 .shift-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; justify-content: center;}
 .card{background:#fff;border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow: 0 2px 4px rgba(0,0,0,0.02); height: auto; min-height: 140px; cursor: pointer; transition: transform 0.2s;}
 .card:hover{ transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:8px; border: 2px solid #f0f2f5; pointer-events: none; }
+.card img{ width:40px; height:40px; border-radius:50%; object-fit:cover; margin-bottom:8px; border: 0px solid #f0f2f5; pointer-events: none; }
 .card strong{ font-size:11px; line-height: 1.3; display:block; color: #34495e; height: auto; overflow: visible; word-wrap: break-word; width: 100%; margin-bottom: 5px;}
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:auto; width: 100%; text-transform: uppercase; }
 
@@ -244,7 +244,7 @@ const db = firebase.database();
 const staffDirectory = [
 {name:"นายวิระบูรณ์ แก่นภักดี",image:"https://i.postimg.cc/P51vs6dR/ว_ระบ_รณ.jpg", phone: "094-640-1006"},
 {name:"น.ส.นริศรา มะลิหอม",image:"https://i.postimg.cc/sg5Gdn36/ม_วนร_ศรา1.jpg", phone: "064-728-8646"},
-{name:"น.ส.เบญจมาศ ชามาตย์",image:"https://i.postimg.cc/7YFJRvrT/เปร_ยว_เบญจมาศ1.jpg", phone: ""},
+{name:"น.ส.เบญจมาศ ชามาตย์",image:"https://i.postimg.cc/7YFJRvrT/เปร_ยว_เบญจมาศ1.jpg", phone: "062-087-3914"},
 {name:"น.ส.รัตติยา พันชัย",image:"https://i.postimg.cc/L6cgWdMK/ร_ตต_ยา_พ_หน_ง.jpg", phone: "088-582-9424"},
 {name:"นายนิกร วงศ์คำแหง",image:"https://i.postimg.cc/qMP6FfHQ/น_กร.jpg", phone: "084-041-1250"},
 {name:"น.ส.กุณฑิกา ส่งเสริม",image:"https://i.postimg.cc/FsMk6tXb/ก_ณฑ_กา_พ_ก_อย1.jpg", phone: "063-791-3832"},
@@ -268,12 +268,18 @@ const staffDirectory = [
 {name:"น.ส.รัตน์สุดา แสงสุข",image:"https://i.postimg.cc/MpV0gPmY/127966.jpg", phone: "061-091-9929"},
 {name:"น.ส.สมิตตานันท์ อนันตภักดิ์",image:"https://i.postimg.cc/13w0bCr0/127965.jpg", phone: "098-234-5168"},
 {name:"น.ส.ญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/prPfxnzw/n-xng-yan-sra.png", phone: ""},
+
+
 {name:"น.ส.สุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg", phone: "062-382-6669"},
 {name:"นายณัฐพงศ์ มีศรี",image:"https://i.postimg.cc/ZYQp37jq/126874_0_0.jpg", phone: "095-660-7253"},
 {name:"น.ส.มาฆสิริ หอธรรม",image:"https://i.postimg.cc/T2sgm7QL/อ_ยล_าส_ด.png", phone: "062-347-8028"},
 {name:"นายบริพัตร กุประดิษฐ์",image:"https://i.postimg.cc/Y0TFH0hw/127961_0_0.jpg", phone: "094-303-3254"},
 {name:"นายธนรัช เดชกังวาล",image:"https://i.postimg.cc/qBFynbQq/127962_0_0.jpg", phone: "099-119-8028"},
+
+
 {name:"นายอภิชาติ ดุมใหม่",image:"https://i.postimg.cc/9QhpRgQj/xph-chat.jpg", phone: "094-953-2380"},
+
+
 {name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเอ_ะ.png", phone: "094-3972488, 093-1381669"},
 {name:"นางธนัชพร สมาทอง",image:"https://i.postimg.cc/qMfcSDnq/แม_อ_ว2567.png", phone: "085-418-7227"},
 {name:"น.ส.พัชรี บุญชิต",image:"https://i.postimg.cc/RVc1B1QN/พ_หน_อยพ_ชร.jpg", phone: "090-263-1287"},
@@ -364,7 +370,7 @@ function showContact(name) {
                 align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
                 box-shadow: 0 4px 6px rgba(47, 109, 246, 0.2);
             " onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                <span style="font-size: 20px;">📋</span> คัดลอกเบอร์ ${index + 1}: ${num}
+                <span style="font-size: 20px;">📋</span>  ${index + 1}: ${num}
             </button>`;
     });
     buttonsHTML += `</div>`;
