@@ -71,6 +71,90 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 /* สไตล์ Pop-up */
 .swal2-title { font-size: 18px !important; color: #1a2a6c !important; }
 .swal2-styled.swal2-confirm { background-color: #2f6df6 !important; padding: 10px 30px !important; }
+
+/* --- ปุ่มลิงก์ด้านล่างสุด --- */
+/* --- สไตล์ปุ่มแบบมืออาชีพ (Modern Dashboard) --- */
+.external-links-container {
+    max-width: 1380px;
+    margin: 40px auto;
+    padding: 0 10px 60px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 25px;
+}
+
+.link-card {
+    display: flex;
+    align-items: center;
+    padding: 20px 25px;
+    text-decoration: none;
+    border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    position: relative;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.link-card:hover {
+    transform: translateY(-8px);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
+}
+
+/* ปุ่มเว็บไซต์ (สีน้ำเงินเข้มแบบกรมท่าราชการ) */
+.link-card.site {
+    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+}
+.link-card.site .link-text strong { color: #ffffff; }
+.link-card.site .link-text span { color: rgba(255,255,255,0.8); }
+
+/* ปุ่ม Dashboard (สีขาวมินิมอล ขอบเขียว) */
+.link-card.dashboard {
+    background: #ffffff;
+    border-left: 6px solid #10b981;
+}
+.link-card.dashboard:hover {
+    border-left-width: 12px;
+}
+
+.link-icon-wrapper {
+    width: 60px;
+    height: 60px;
+    background: rgba(255,255,255,0.15);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    margin-right: 20px;
+    backdrop-filter: blur(5px);
+}
+
+.link-card.dashboard .link-icon-wrapper {
+    background: #f0fdf4;
+}
+
+.link-text {
+    display: flex;
+    flex-direction: column;
+}
+
+.link-text span {
+    font-size: 13px;
+    font-weight: 400;
+    margin-bottom: 2px;
+}
+
+.link-text strong {
+    font-size: 19px;
+    font-weight: 700;
+    letter-spacing: -0.5px;
+}
+
+.link-card.dashboard strong { color: #065f46; }
+
+
 </style>
 </head>
 
@@ -162,6 +246,28 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
         </div>
     </div>
 </div>
+
+<div class="external-links-container">
+    <a href="https://sites.google.com/view/1669ubon/%E0%B8%AB%E0%B8%99%E0%B8%B2%E0%B9%81%E0%B8%A3%E0%B8%81" target="_blank" class="link-card site">
+        <div class="link-icon-wrapper">🌐</div>
+        <div class="link-text">
+            <span>Official Website</span>
+            <strong>ศูนย์รับแจ้งเหตุฯ 1669 อุบลฯ</strong>
+        </div>
+    </a>
+
+    <a href="https://lookerstudio.google.com/reporting/476d289c-1379-4812-a061-b2627c32ff1e" target="_blank" class="link-card dashboard">
+        <div class="link-icon-wrapper">📊</div>
+        <div class="link-text">
+            <span>Statistical Overview</span>
+            <strong>EMS Performance Dashboard</strong>
+        </div>
+    </a>
+</div>
+
+
+
+
 
 <audio id="notifySound">
 <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
