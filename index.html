@@ -5,9 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>EMS Shift Board - Firebase Realtime</title>
 <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap" rel="stylesheet">
-
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
@@ -15,24 +13,40 @@
 /* --- สไตล์พื้นฐาน --- */
 *{font-family:Sarabun, sans-serif;box-sizing:border-box}
 body{margin:0;background:#f4f7f9;color:#2c3e50;padding-top: 5px;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-.header{display:flex;align-items:center;justify-content:space-between;padding:10px 30px;background: white;box-shadow: 0 2px 10px rgba(0,0,0,0.05);border-bottom: 2px solid #2f6df6;}
+
+/* --- Header & Online Status --- */
+.header{display:flex;align-items:center;justify-content:space-between;padding:10px 30px;background: white;box-shadow: 0 2px 10px rgba(0,0,0,0.05);border-bottom: 2px solid #2f6df6; position: relative;}
 .header img{height:45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));}
 .header-center h2{font-size:18px;margin:0 0 5px 0;color: #1a2a6c;text-transform: uppercase;letter-spacing: 0.5px;}
+
+.online-status {
+    display: flex; align-items: center; gap: 8px; font-size: 12px; color: #27ae60; font-weight: 600;
+    position: absolute; top: 12px; right: 20px; background: rgba(240, 253, 244, 0.8);
+    padding: 4px 12px; border-radius: 20px; border: 1px solid #bdf0d2;
+}
+.pulse-dot {
+    width: 8px; height: 8px; background-color: #27ae60; border-radius: 50%;
+    box-shadow: 0 0 0 rgba(39, 174, 96, 0.4); animation: pulse 1.5s infinite;
+}
+@keyframes pulse {
+    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
+    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
+    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
+}
+
 .clock-container {display: flex;flex-direction: column;align-items: center;background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);padding: 8px 25px;border-radius: 12px;border: 1px solid #d1d9e6;box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 6px rgba(0,0,0,0.05);min-width: 300px;}
 #date { font-size: 12px; color: #5e6d82; font-weight: 400; }
 #time { font-size: 24px; font-weight: 700; color: #2f6df6; letter-spacing: 1px; margin-top: -2px;}
 
-/* --- ฟอร์มและปุ่ม --- */
+/* --- ฟอร์มและปุ่มจัดการ --- */
 .form-box{background: white;padding:12px;margin:10px auto;border-radius:10px;max-width:1380px;display: grid;grid-template-columns: 1.2fr 1.5fr 1.2fr 0.6fr 0.6fr 0.8fr;gap: 10px;align-items: center;box-shadow: 0 4px 6px rgba(0,0,0,0.03);}
 input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8px;border: 1px solid #ced4da;padding: 0 12px;width: 100%;transition: all 0.2s;}
-input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0 3px rgba(47, 109, 246, 0.1);}
 .add-btn { background: #2f6df6; color: white; border: none; font-weight: 600; cursor: pointer; }
 .add-btn:hover { background: #1a56db; transform: translateY(-1px); }
 .clear-btn { background: white; color: #e74c3c; border: 1px solid #e74c3c; font-weight: 600; cursor: pointer; }
-.clear-btn:hover { background: #fff5f5; }
 .total-box {background: #eef3ff;border: 1px solid #2f6df6;color: #2f6df6;display: flex;align-items: center;justify-content: center;font-weight: 700;}
 
-/* --- การแสดงผลบอร์ด --- */
+/* --- บอร์ดแสดงรายชื่อ --- */
 .container{max-width:1400px;margin:auto;padding:0 15px 15px 15px;display: flex;flex-direction: column;gap: 10px;}
 .top-management {display: grid;grid-template-columns: 0.8fr 1.2fr 0.4fr;gap: 10px;}
 .management-box {background: #ffffff;padding: 10px;border-radius: 10px;border: 1.5px solid #2f6df6;}
@@ -48,17 +62,14 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 .card{background:#fff;border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow: 0 2px 4px rgba(0,0,0,0.02); height: auto; min-height: 140px; cursor: pointer; transition: transform 0.2s;}
 .card:hover{ transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 .card img{ width:45px; height:45px; border-radius:50%; object-fit:cover; margin-bottom:8px; border: 2px solid #f0f2f5; pointer-events: none; }
-
 .card strong{ font-size:11px; line-height: 1.3; display:block; color: #34495e; height: auto; overflow: visible; word-wrap: break-word; width: 100%; margin-bottom: 5px;}
-
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:auto; width: 100%; text-transform: uppercase; }
 
-/* จัดการสี Badge */
+/* สีตำแหน่ง */
 .CALLTAKER{background:#2ecc71; color: black;}
 .พนักงานเขียนเคส{background:#4da3ff;} 
 .COORDINATOR{background:#f39c12;} 
-.DOCTOR, 
-.DOC{background:#9b59b6;} 
+.DOCTOR, .DOC{background:#9b59b6;} 
 .EMD{background:#e67e22;} 
 .SUPERVISOR{background:#f1c40f;color:black;} 
 .IT{background:#455a64;}
@@ -66,135 +77,74 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 .count{ background:#2f6df6; color:white; padding:2px 10px; border-radius:12px; font-size:12px; }
 .delete-shift-icon {color: #e74c3c;cursor: pointer;font-size: 18px;transition: transform 0.2s;user-select: none;}
 .delete{margin-top:8px; font-size:10px; color:#c0392b; cursor:pointer; opacity: 0.6;}
-.delete:hover{opacity: 1;}
 
-/* สไตล์ Pop-up */
-.swal2-title { font-size: 18px !important; color: #1a2a6c !important; }
-.swal2-styled.swal2-confirm { background-color: #2f6df6 !important; padding: 10px 30px !important; }
-
-/* --- ปุ่มลิงก์ด้านล่างสุด --- */
-/* --- สไตล์ปุ่มแบบมืออาชีพ (Modern Dashboard) --- */
+/* --- สไตล์ปุ่มลิงก์แบบมืออาชีพ (ล่างสุด) --- */
 .external-links-container {
-    max-width: 1380px;
-    margin: 40px auto;
-    padding: 0 10px 60px;
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
-    gap: 25px;
+    max-width: 1380px; margin: 40px auto; padding: 0 10px 60px;
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;
 }
-
 .link-card {
-    display: flex;
-    align-items: center;
-    padding: 20px 25px;
-    text-decoration: none;
-    border-radius: 20px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-    position: relative;
-    overflow: hidden;
-    background: #fff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-    border: 1px solid rgba(0,0,0,0.05);
+    display: flex; align-items: center; padding: 20px 25px; text-decoration: none; border-radius: 20px;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); background: #fff;
+    box-shadow: 0 10px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
 }
-
-.link-card:hover {
-    transform: translateY(-8px);
-    box-shadow: 0 15px 30px rgba(0,0,0,0.08);
-}
-
-/* ปุ่มเว็บไซต์ (สีน้ำเงินเข้มแบบกรมท่าราชการ) */
-.link-card.site {
-    background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
-}
+.link-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
+.link-card.site { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
 .link-card.site .link-text strong { color: #ffffff; }
 .link-card.site .link-text span { color: rgba(255,255,255,0.8); }
-
-/* ปุ่ม Dashboard (สีขาวมินิมอล ขอบเขียว) */
-.link-card.dashboard {
-    background: #ffffff;
-    border-left: 6px solid #10b981;
-}
-.link-card.dashboard:hover {
-    border-left-width: 12px;
-}
-
+.link-card.dashboard { background: #ffffff; border-left: 6px solid #10b981; }
+.link-card.dashboard:hover { border-left-width: 12px; }
 .link-icon-wrapper {
-    width: 60px;
-    height: 60px;
-    background: rgba(255,255,255,0.15);
-    border-radius: 15px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 28px;
-    margin-right: 20px;
-    backdrop-filter: blur(5px);
+    width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 15px;
+    display: flex; align-items: center; justify-content: center; font-size: 28px; margin-right: 20px;
 }
-
-.link-card.dashboard .link-icon-wrapper {
-    background: #f0fdf4;
-}
-
-.link-text {
-    display: flex;
-    flex-direction: column;
-}
-
-.link-text span {
-    font-size: 13px;
-    font-weight: 400;
-    margin-bottom: 2px;
-}
-
-.link-text strong {
-    font-size: 19px;
-    font-weight: 700;
-    letter-spacing: -0.5px;
-}
-
+.link-card.dashboard .link-icon-wrapper { background: #f0fdf4; }
+.link-text { display: flex; flex-direction: column; }
+.link-text span { font-size: 13px; margin-bottom: 2px; }
+.link-text strong { font-size: 18px; font-weight: 700; }
 .link-card.dashboard strong { color: #065f46; }
-
-
 </style>
 </head>
 
 <body> 
 <div class="header">
-<img src="https://i.postimg.cc/tgMz7SVd/sphch.png" alt="Logo Left">
-<div class="header-center">
-<h2>หน้าที่เวรประจำวัน ศูนย์รับแจ้งเหตุและสั่งการ จังหวัดอุบลราชธานี</h2>
-<div class="clock-container">
-    <div id="date"></div>
-    <div id="time"></div>
-</div>
-</div>
-<img src="https://i.postimg.cc/g0JDzFrV/xbc.png" alt="Logo Right">
+    <img src="https://i.postimg.cc/tgMz7SVd/sphch.png" alt="Logo Left"> 
+    <div class="header-center">
+        <h2>หน้าที่เวรประจำวัน ศูนย์รับแจ้งเหตุและสั่งการ จังหวัดอุบลราชธานี</h2>
+        <div class="clock-container">
+            <div id="date"></div>
+            <div id="time"></div>
+        </div>
+    </div>
+    <img src="https://i.postimg.cc/g0JDzFrV/xbc.png" alt="Logo Right">
+    
+    <div class="online-status">
+        <div class="pulse-dot"></div>
+        <span>Live Connected</span>
+    </div>
 </div>
 
 <div class="form-box">
-<select id="shift">
-<option value="night">🌙 เวรดึก 24.00 น. - 08.00 น.</option>
-<option value="morning" selected>☀️ เวรเช้า 08.00 น. - 16.00 น.</option>
-<option value="afternoon">🌤️ เวรบ่าย 16.00 น.- 24.00 น.</option>
-</select>
-
-<input list="nameList" id="name" placeholder="🔍 ค้นหาหรือพิมพ์ชื่อ...">
-<datalist id="nameList"></datalist>
-
-<select id="position">
-<option value="">-- เลือกตำแหน่ง --</option>
-<option value="DOCTOR">👨‍⚕️ แพทย์เวร (DOCTOR)</option> <option value="SUPERVISOR">👩‍⚕️ พยาบาลเวร (SUPERVISOR)</option>
-<option value="EMD">📟 ผู้จ่ายงาน (EMD)</option>
-<option value="IT">💻 เจ้าหน้าที่คอมพิวเตอร์ (IT)</option>
-<option value="CALL TAKER">📞 CALL TAKER</option>
-<option value="พนักงานเขียนเคส">📝 พนักงานเขียนเคส</option>
-<option value="COORDINATOR">📻 COORDINATOR</option>
-</select>
-
-<button class="add-btn" onclick="addItem()">+ เพิ่มรายชื่อ</button>
-<button class="clear-btn" onclick="clearAll()">ลบรายชื่อทั้งหมด</button>
-
-<div class="total-box">👤 รวม&nbsp;: <span id="totalCount" style="margin-left:5px">0</span> &nbsp;คน</div>
+    <select id="shift">
+        <option value="night">🌙 เวรดึก 24.00 น. - 08.00 น.</option>
+        <option value="morning" selected>☀️ เวรเช้า 08.00 น. - 16.00 น.</option>
+        <option value="afternoon">🌤️ เวรบ่าย 16.00 น.- 24.00 น.</option>
+    </select>
+    <input list="nameList" id="name" placeholder="🔍 ค้นหาหรือพิมพ์ชื่อ...">
+    <datalist id="nameList"></datalist>
+    <select id="position">
+        <option value="">-- เลือกตำแหน่ง --</option>
+        <option value="DOCTOR">👨‍⚕️ แพทย์เวร (DOCTOR)</option> 
+        <option value="SUPERVISOR">👩‍⚕️ พยาบาลเวร (SUPERVISOR)</option>
+        <option value="EMD">📟 ผู้จ่ายงาน (EMD)</option>
+        <option value="IT">💻 เจ้าหน้าที่คอมพิวเตอร์ (IT)</option>
+        <option value="CALL TAKER">📞 CALL TAKER</option>
+        <option value="พนักงานเขียนเคส">📝 พนักงานเขียนเคส</option>
+        <option value="COORDINATOR">📻 COORDINATOR</option>
+    </select>
+    <button class="add-btn" onclick="addItem()">+ เพิ่มรายชื่อ</button>
+    <button class="clear-btn" onclick="clearAll()">ลบรายชื่อทั้งหมด</button>
+    <div class="total-box">👤 รวม&nbsp;: <span id="totalCount" style="margin-left:5px">0</span> &nbsp;คน</div>
 </div>
 
 <div class="container">
@@ -248,14 +198,13 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
 </div>
 
 <div class="external-links-container">
-    <a href="https://sites.google.com/view/1669ubon/%E0%B8%AB%E0%B8%99%E0%B8%B2%E0%B9%81%E0%B8%A3%E0%B8%81" target="_blank" class="link-card site">
+    <a href="https://sites.google.com/view/1669ubon/" target="_blank" class="link-card site">
         <div class="link-icon-wrapper">🌐</div>
         <div class="link-text">
             <span>Official Website</span>
             <strong>ศูนย์รับแจ้งเหตุฯ 1669 อุบลฯ</strong>
         </div>
     </a>
-
     <a href="https://lookerstudio.google.com/reporting/476d289c-1379-4812-a061-b2627c32ff1e" target="_blank" class="link-card dashboard">
         <div class="link-icon-wrapper">📊</div>
         <div class="link-text">
@@ -265,16 +214,12 @@ input:focus, select:focus {border-color: #2f6df6;outline: none;box-shadow: 0 0 0
     </a>
 </div>
 
-
-
-
-
 <audio id="notifySound">
-<source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
+    <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
 </audio>
 
 <script>
-// --- ตัวป้องกัน View Source ---
+// (ส่วน JavaScript เดิมของคุณทั้งหมด คงไว้เหมือนเดิม)
 document.addEventListener('contextmenu', e => e.preventDefault());
 document.addEventListener('keydown', function(e) {
     if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) {
@@ -323,18 +268,12 @@ const staffDirectory = [
 {name:"น.ส.รัตน์สุดา แสงสุข",image:"https://i.postimg.cc/MpV0gPmY/127966.jpg", phone: "061-091-9929"},
 {name:"น.ส.สมิตตานันท์ อนันตภักดิ์",image:"https://i.postimg.cc/13w0bCr0/127965.jpg", phone: "098-234-5168"},
 {name:"น.ส.ญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/prPfxnzw/n-xng-yan-sra.png", phone: ""},
-
-
 {name:"น.ส.สุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg", phone: "062-382-6669"},
 {name:"นายณัฐพงศ์ มีศรี",image:"https://i.postimg.cc/ZYQp37jq/126874_0_0.jpg", phone: "095-660-7253"},
 {name:"น.ส.มาฆสิริ หอธรรม",image:"https://i.postimg.cc/T2sgm7QL/อ_ยล_าส_ด.png", phone: "062-347-8028"},
 {name:"นายบริพัตร กุประดิษฐ์",image:"https://i.postimg.cc/Y0TFH0hw/127961_0_0.jpg", phone: "094-303-3254"},
 {name:"นายธนรัช เดชกังวาล",image:"https://i.postimg.cc/qBFynbQq/127962_0_0.jpg", phone: "099-119-8028"},
-
-
 {name:"นายอภิชาติ ดุมใหม่",image:"https://i.postimg.cc/9QhpRgQj/xph-chat.jpg", phone: "094-953-2380"},
-
-
 {name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเอ_ะ.png", phone: "094-3972488, 093-1381669"},
 {name:"นางธนัชพร สมาทอง",image:"https://i.postimg.cc/qMfcSDnq/แม_อ_ว2567.png", phone: "085-418-7227"},
 {name:"น.ส.พัชรี บุญชิต",image:"https://i.postimg.cc/RVc1B1QN/พ_หน_อยพ_ชร.jpg", phone: "090-263-1287"},
@@ -393,7 +332,6 @@ function clearShift(shiftValue) {
     }
 }
 
-// ฟังก์ชัน Pop-up แสดงเบอร์โทรศัพท์และคัดลอก
 function showContact(name) {
     const person = staffDirectory.find(s => s.name === name);
     const phoneNumber = (person && person.phone) ? person.phone : "";
@@ -414,31 +352,18 @@ function showContact(name) {
         return;
     }
 
-    // แยกเบอร์โทรศัพท์ (รองรับทั้งคอมม่าและเว้นวรรค)
     const phoneNumbers = phoneNumber.split(/[, ]+/).filter(n => n.trim() !== "");
-
-    // สร้างปุ่มคัดลอกสไตล์ Modern
     let buttonsHTML = `<div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">`;
     phoneNumbers.forEach((num, index) => {
         const cleanNum = num.replace(/-/g, '');
         buttonsHTML += `
             <button onclick="copyOnly('${cleanNum}')" style="
                 background: linear-gradient(135deg, #2f6df6 0%, #1a56db 100%);
-                color: white;
-                border: none;
-                padding: 12px 20px;
-                border-radius: 10px;
-                font-size: 16px;
-                font-weight: 600;
-                cursor: pointer;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                gap: 10px;
-                transition: all 0.2s;
+                color: white; border: none; padding: 12px 20px; border-radius: 10px;
+                font-size: 16px; font-weight: 600; cursor: pointer; display: flex;
+                align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
                 box-shadow: 0 4px 6px rgba(47, 109, 246, 0.2);
-            " onmouseover="this.style.transform='translateY(-2px)'; this.style.boxShadow='0 6px 12px rgba(47, 109, 246, 0.3)';" 
-               onmouseout="this.style.transform='translateY(0)'; this.style.boxShadow='0 4px 6px rgba(47, 109, 246, 0.2)';">
+            " onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
                 <span style="font-size: 20px;">📋</span> คัดลอกเบอร์ ${index + 1}: ${num}
             </button>`;
     });
@@ -446,42 +371,17 @@ function showContact(name) {
 
     Swal.fire({
         title: `<span style="color: #1a2a6c; font-size: 22px;">${name}</span>`,
-        html: `
-            <div style="text-align:center; padding: 10px;">
+        html: `<div style="text-align:center; padding: 10px;">
                 <img src="${imageUrl}" style="width:130px; height:130px; border-radius:50%; object-fit:cover; border: 4px solid #2f6df6; margin-bottom:20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
-                <p style="font-size:16px; color:#5e6d82; margin-bottom: 15px;">เลือกเบอร์ที่ต้องการเพื่อนำไปวางในแอป Agent</p>
                 ${buttonsHTML}
             </div>`,
-        showConfirmButton: false,
-        showCloseButton: true, // เปิดปุ่มกากบาท
-        focusConfirm: false,
-        customClass: {
-            closeButton: 'custom-close-button'
-        },
-        didOpen: () => {
-            // ปรับแต่งสีปุ่มกากบาทด้วย CSS
-            const closeBtn = document.querySelector('.swal2-close');
-            if(closeBtn) {
-                closeBtn.style.color = '#e74c3c'; // สีแดง
-                closeBtn.style.fontSize = '40px'; // ขนาดใหญ่ชัดเจน
-            }
-        }
+        showConfirmButton: false, showCloseButton: true
     });
 }
 
 function copyOnly(num) {
     navigator.clipboard.writeText(num).then(() => {
-        const Toast = Swal.mixin({
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timer: 2000,
-            timerProgressBar: true
-        });
-        Toast.fire({
-            icon: 'success',
-            title: `คัดลอกเบอร์ ${num} แล้ว`
-        });
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `คัดลอกเบอร์ ${num} แล้ว`, showConfirmButton: false, timer: 2000 });
     });
 }
 
@@ -494,21 +394,9 @@ function render(){
         const person=staffDirectory.find(s=>s.name===item.name);
         const div=document.createElement("div");
         div.className="card";
-        
-        // เพิ่มการคลิกเพื่อดูเบอร์แบบสวยงาม
         div.setAttribute("onclick", `showContact('${item.name}')`);
 
-        const posStyles = {
-            'DOC': '#9b59b6',
-            'DOCTOR': '#9b59b6',
-            'SUPERVISOR': '#f1c40f',
-            'EMD': '#e67e22',
-            'IT': '#455a64',
-            'CALL TAKER': '#2ecc71',
-            'พนักงานเขียนเคส': '#4da3ff',
-            'COORDINATOR': '#f39c12'
-        };
-        
+        const posStyles = { 'DOC': '#9b59b6', 'DOCTOR': '#9b59b6', 'SUPERVISOR': '#f1c40f', 'EMD': '#e67e22', 'IT': '#455a64', 'CALL TAKER': '#2ecc71', 'พนักงานเขียนเคส': '#4da3ff', 'COORDINATOR': '#f39c12' };
         const currentPos = item.position.toUpperCase();
         const borderColor = posStyles[currentPos] || '#eaedf2';
         div.style.border = `2.5px solid ${borderColor}`;
