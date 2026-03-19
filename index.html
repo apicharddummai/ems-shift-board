@@ -9,6 +9,11 @@
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
+
+
+
+
+
 <style>
 /* --- สไตล์พื้นฐาน --- */
 *{font-family:Sarabun, sans-serif;box-sizing:border-box}
@@ -105,8 +110,11 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 .link-card.dashboard strong { color: #065f46; }
 </style>
 </head>
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 <body> 
+
+
+
 <div class="header">
     <img src="https://i.postimg.cc/tgMz7SVd/sphch.png" alt="Logo Left"> 
     <div class="header-center">
@@ -198,13 +206,15 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 </div>
 
 <div class="external-links-container">
-    <a href="https://apicharddummai.github.io/main/" target="_blank" class="link-card site">
-        <div class="link-icon-wrapper">🌐</div>
-        <div class="link-text">
-            <span>Official Website</span>
-            <strong>ศูนย์รับแจ้งเหตุฯ 1669 อุบลฯ</strong>
-        </div>
-    </a>
+   <a href="https://apicharddummai.github.io/main/" class="link-card site">
+    <div class="link-icon-wrapper">
+        <i class="fa-solid fa-house" style="color: white;"></i>
+    </div>
+    <div class="link-text">
+        <span>Official Website</span>
+        <strong>กลับสู่หน้าหลัก</strong>
+    </div>
+</a>
     <a href="https://lookerstudio.google.com/reporting/476d289c-1379-4812-a061-b2627c32ff1e" target="_blank" class="link-card dashboard">
         <div class="link-icon-wrapper">📊</div>
         <div class="link-text">
@@ -268,7 +278,7 @@ const staffDirectory = [
 {name:"น.ส.รัตน์สุดา แสงสุข",image:"https://i.postimg.cc/MpV0gPmY/127966.jpg", phone: "061-091-9929"},
 {name:"น.ส.สมิตตานันท์ อนันตภักดิ์",image:"https://i.postimg.cc/13w0bCr0/127965.jpg", phone: "098-234-5168"},
 {name:"น.ส.ญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/prPfxnzw/n-xng-yan-sra.png", phone: ""},
-{name:"น.ส.ภรณ์ทิพย์ ทิพประมวล",image:"https://i.postimg.cc/xC8npMXh/x-xm2.png", phone: "093-614-5602"},    
+{name:"น.ส.ภรณ์ทิพย์ ทิพประมวล",image:"https://i.postimg.cc/xC8npMXh/x-xm2.png", phone: "093-614-5602"},
 
 
 {name:"น.ส.สุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg", phone: "062-382-6669"},
@@ -444,4 +454,9 @@ updateClock();
 function clearAll(){ if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); } }
 </script>
 </body>
+
+
+
+
 </html>
+
