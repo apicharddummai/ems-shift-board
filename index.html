@@ -126,6 +126,8 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
     </div>
     <img src="https://i.postimg.cc/g0JDzFrV/xbc.png" alt="Logo Right">
     
+	
+	
     <div class="online-status">
         <div class="pulse-dot"></div>
         <span>Live Connected</span>
@@ -308,7 +310,7 @@ const staffDirectory = [
 {name:"น.ส.จันทร์จิรา จันทร์สว่าง",image:"https://i.postimg.cc/Fstb8Cc1/จ_นทร_จ_รา_ตต.jpg", phone: "098-829-8552"},
 {name:"น.ส.เบญจวรรณ อ่อนอรรถ",image:"https://i.postimg.cc/9F3PKgTw/พ_เอ_เบญจวรรณ.png", phone: "085-104-5092 / 092-256-7107"},
 {name:"นายแพทย์ชัยพร  บุญศรี",image:"https://i.postimg.cc/Dzby9612/74711.jpg", phone: "092-556-6651"},
-{name:"แพทย์หญิงวรรษพร  อมรไชย",image:"https://i.postimg.cc/CKfL37bh/74708.jpg", phone: "085-764-1859"}
+{name:"แพทย์หญิงวรรษพร  อมรไชย",image:"https://i.postimg.cc/CKfL37bh/74708.jpg", phone: ""}
 ];
 
 const nameList=document.getElementById("nameList");
@@ -452,6 +454,35 @@ setInterval(updateClock,1000);
 updateClock();
 
 function clearAll(){ if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); } }
+</script>
+
+
+
+<div onclick="toggleFS()" id="fs-icon" style="position: fixed; top: 10px; right: 10px; z-index: 10000; cursor: pointer; background: rgba(255,255,255,0.8); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; color: #2f6df6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
+    <i class="fa-solid fa-expand" id="icon-fs"></i>
+</div>
+
+<script>
+function toggleFS() {
+    const icon = document.getElementById("icon-fs");
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen();
+        icon.classList.replace("fa-expand", "fa-compress");
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+            icon.classList.replace("fa-compress", "fa-expand");
+        }
+    }
+}
+
+// ถ้ากด Esc ให้ไอคอนเปลี่ยนกลับเอง
+document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById("icon-fs");
+    if (!document.fullscreenElement) {
+        icon.classList.replace("fa-compress", "fa-expand");
+    }
+});
 </script>
 </body>
 
