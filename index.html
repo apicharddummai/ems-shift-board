@@ -10,7 +10,7 @@
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
 
 
-
+<script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
 
 
 
@@ -469,11 +469,12 @@ function render(){
         div.style.border = `2.5px solid ${borderColor}`;
 
         div.innerHTML=`
-            <img src="${person?person.image:''}">
-            <strong>${item.name}</strong>
-            <span class="badge ${item.position.replace(/\s/g,'')}">${item.position}</span>
-            <div class="delete" onclick="event.stopPropagation(); removeItem(${index})">ลบออก</div>
-        `;
+    <img src="${person?person.image:''}">
+    <strong class="staff-name">${item.name}</strong>
+    <span class="badge ${item.position.replace(/\s/g,'')} staff-pos">${item.position}</span>
+    <input type="hidden" class="staff-shift" value="${item.shift}"> 
+    <div class="delete" onclick="event.stopPropagation(); removeItem(${index})">ลบออก</div>
+`;
 
         if(currentPos === "DOC" || currentPos === "DOCTOR") { 
             document.getElementById("doctor-area").appendChild(div);
@@ -531,6 +532,65 @@ document.addEventListener('fullscreenchange', () => {
         icon.classList.replace("fa-compress", "fa-expand");
     }
 });
+
+
+// ฟังก์ชันสำหรับเปิดระบบลากวาง
+function initSortable() {
+    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
+    
+    areas.forEach(areaId => {
+        const el = document.getElementById(areaId);
+        if (!el) return;
+
+        new Sortable(el, {
+            group: 'shared', // ย้ายข้ามกลุ่มได้ (เช่น ย้ายจากเวรเช้าไปบ่าย)
+            animation: 150,
+            ghostClass: 'sortable-ghost', // คลาสหลอกตอนลาก
+            onEnd: function () {
+                // เมื่อลากวางเสร็จ ให้ทำการรวมข้อมูลใหม่จากหน้าจอ
+                saveNewOrder();
+            },
+        });
+    });
+}
+
+// ฟังก์ชันอ่านลำดับจากหน้าจอ แล้วบันทึกลง Firebase
+function saveNewOrder() {
+    let newData = [];
+    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
+
+    areas.forEach(areaId => {
+        const container = document.getElementById(areaId);
+        const cards = container.querySelectorAll('.card');
+
+        cards.forEach(card => {
+            const name = card.querySelector('.staff-name').innerText;
+            const position = card.querySelector('.staff-pos').innerText;
+            let shift = card.querySelector('.staff-shift').value;
+
+            // ถ้าลากข้ามกลุ่มเวรหลัก ให้เปลี่ยนค่า shift ตามกลุ่มใหม่
+            if (["night", "morning", "afternoon"].includes(areaId)) {
+                shift = areaId;
+            }
+
+            newData.push({ name, position, shift });
+        });
+    });
+
+    // อัปเดตตัวแปร data และส่งขึ้น Firebase
+    data = newData;
+    db.ref('shiftData').set(data);
+}
+
+// แก้ไขฟังก์ชัน render เดิมของคุณเล็กน้อย
+// ให้เรียกใช้ initSortable() ทุกครั้งหลังวาดหน้าจอเสร็จ
+const originalRender = render;
+render = function() {
+    originalRender();
+    initSortable();
+};
+
+
 </script>
 </body>
 
