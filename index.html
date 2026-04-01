@@ -72,7 +72,7 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 
 /* สีตำแหน่ง */
 .CALLTAKER{background:#2ecc71; color: black;}
-.พนักงานเขียนเคส{background:#4da3ff;} 
+.พนักงานบันทึกข้อมูล{background:#4da3ff;}
 .COORDINATOR{background:#f39c12;} 
 .DOCTOR, .DOC{background:#9b59b6;} 
 .EMD{background:#e67e22;} 
@@ -149,7 +149,7 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
         <option value="EMD">📟 ผู้จ่ายงาน (EMD)</option>
         <option value="IT">💻 เจ้าหน้าที่คอมพิวเตอร์ (IT)</option>
         <option value="CALL TAKER">📞 CALL TAKER</option>
-        <option value="พนักงานเขียนเคส">📝 พนักงานเขียนเคส</option>
+        <option value="พนักงานบันทึกข้อมูล">📝 พนักงานบันทึกข้อมูล</option>
         <option value="COORDINATOR">📻 COORDINATOR</option>
     </select>
     <button class="add-btn" onclick="addItem()">+ เพิ่มรายชื่อ</button>
@@ -415,7 +415,7 @@ function render(){
         div.className="card";
         div.setAttribute("onclick", `showContact('${item.name}')`);
 
-        const posStyles = { 'DOC': '#9b59b6', 'DOCTOR': '#9b59b6', 'SUPERVISOR': '#f1c40f', 'EMD': '#e67e22', 'IT': '#455a64', 'CALL TAKER': '#2ecc71', 'พนักงานเขียนเคส': '#4da3ff', 'COORDINATOR': '#f39c12' };
+        const posStyles = { 'DOC': '#9b59b6', 'DOCTOR': '#9b59b6', 'SUPERVISOR': '#f1c40f', 'EMD': '#e67e22', 'IT': '#455a64', 'CALL TAKER': '#2ecc71', 'พนักงานบันทึกข้อมูล': '#4da3ff', 'COORDINATOR': '#f39c12' };
         const currentPos = item.position.toUpperCase();
         const borderColor = posStyles[currentPos] || '#eaedf2';
         div.style.border = `2.5px solid ${borderColor}`;
