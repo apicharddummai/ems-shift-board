@@ -351,58 +351,106 @@ function clearShift(shiftValue) {
     }
 }
 
-function showContact(name) {
-    const person = staffDirectory.find(s => s.name === name);
+function showContact(index) {
+    const item = data[index]; // ดึงข้อมูลจากลำดับที่คลิก
+    const person = staffDirectory.find(s => s.name === item.name);
     const phoneNumber = (person && person.phone) ? person.phone : "";
     const imageUrl = (person && person.image) ? person.image : "";
 
-    if (!phoneNumber || phoneNumber === "ไม่มีข้อมูลเบอร์โทร") {
-        Swal.fire({
-            title: `<span style="color: #1a2a6c;">${name}</span>`,
-            html: `
-                <div style="padding: 20px;">
-                    <img src="${imageUrl}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border: 4px solid #eee; margin-bottom:15px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-                    <p style="font-size: 18px; color: #e74c3c; font-weight: 600;">❌ ไม่มีข้อมูลเบอร์โทรศัพท์</p>
-                </div>`,
-            showConfirmButton: true,
-            confirmButtonText: 'รับทราบ',
-            confirmButtonColor: '#2f6df6'
-        });
-        return;
-    }
-
+    // จัดการเบอร์โทรศัพท์
     const phoneNumbers = phoneNumber.split(/[, ]+/).filter(n => n.trim() !== "");
-    let buttonsHTML = `<div style="display: flex; flex-direction: column; gap: 12px; margin-top: 10px;">`;
-    phoneNumbers.forEach((num, index) => {
-        const cleanNum = num.replace(/-/g, '');
-        buttonsHTML += `
-            <button onclick="copyOnly('${cleanNum}')" style="
-                background: linear-gradient(135deg, #2f6df6 0%, #1a56db 100%);
-                color: white; border: none; padding: 12px 20px; border-radius: 10px;
-                font-size: 16px; font-weight: 600; cursor: pointer; display: flex;
-                align-items: center; justify-content: center; gap: 10px; transition: all 0.2s;
-                box-shadow: 0 4px 6px rgba(47, 109, 246, 0.2);
-            " onmouseover="this.style.transform='translateY(-2px)';" onmouseout="this.style.transform='translateY(0)';">
-                <span style="font-size: 20px;">📋</span>  ${index + 1}: ${num}
-            </button>`;
-    });
+    let buttonsHTML = `<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">`;
+    
+    if (phoneNumbers.length > 0) {
+        phoneNumbers.forEach((num, i) => {
+            const cleanNum = num.replace(/-/g, '');
+            buttonsHTML += `
+                <button onclick="copyOnly('${cleanNum}')" style="background:#2f6df6; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600;">
+                    📋 คัดลอกเบอร์: ${num}
+                </button>`;
+        });
+    } else {
+        buttonsHTML += `<p style="color:#e74c3c;">❌ ไม่มีข้อมูลเบอร์โทรศัพท์</p>`;
+    }
     buttonsHTML += `</div>`;
 
     Swal.fire({
-        title: `<span style="color: #1a2a6c; font-size: 22px;">${name}</span>`,
-        html: `<div style="text-align:center; padding: 10px;">
-                <img src="${imageUrl}" style="width:130px; height:130px; border-radius:50%; object-fit:cover; border: 4px solid #2f6df6; margin-bottom:20px; box-shadow: 0 4px 15px rgba(0,0,0,0.15);">
+        title: `<span style="color: #1a2a6c; font-size: 22px;">${item.name}</span>`,
+        html: `
+            <div style="text-align:center;">
+                <img src="${imageUrl}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border: 4px solid #2f6df6; margin-bottom:10px;">
+                <div style="margin-bottom:15px;">
+                    <span style="font-size:14px; color:#666;">ตำแหน่งปัจจุบัน:</span><br>
+                    <strong style="font-size:18px; color:#2f6df6;">${item.position}</strong>
+                </div>
+                <button onclick="editPosition(${index})" style="background:#f39c12; color:white; border:none; padding:8px 20px; border-radius:20px; cursor:pointer; font-size:14px; transition:0.3s;">
+                    ✏️ แก้ไขตำแหน่งนี้
+                </button>
+                <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
                 ${buttonsHTML}
             </div>`,
-        showConfirmButton: false, showCloseButton: true
+        showConfirmButton: false,
+        showCloseButton: true
     });
 }
+
+function editPosition(index) {
+    const currentPos = data[index].position;
+    const allPositions = [
+        "DOCTOR", "SUPERVISOR", "EMD", "IT", "CALL TAKER", "พนักงานบันทึกข้อมูล", "COORDINATOR"
+    ];
+    
+    // สร้างตัวเลือกตำแหน่ง
+    let optionsHTML = `<select id="swal-input-pos" class="swal2-input" style="width: 80%; font-family: Sarabun;">`;
+    allPositions.forEach(p => {
+        optionsHTML += `<option value="${p}" ${currentPos === p ? 'selected' : ''}>${p}</option>`;
+    });
+    optionsHTML += `</select>`;
+
+    Swal.fire({
+        title: 'เปลี่ยนตำแหน่งงาน',
+        html: optionsHTML,
+        focusConfirm: false,
+        showCancelButton: true,
+        confirmButtonText: 'บันทึกการแก้ไข',
+        cancelButtonText: 'ยกเลิก',
+        confirmButtonColor: '#2f6df6',
+        preConfirm: () => {
+            return document.getElementById('swal-input-pos').value;
+        }
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // อัปเดตข้อมูลในตัวแปร data
+            data[index].position = result.value;
+            
+            // ส่งข้อมูลที่แก้ไขแล้วขึ้น Firebase (syncData จะทำงานและ render ใหม่ให้อัตโนมัติ)
+            syncData();
+            
+            Swal.fire({
+                icon: 'success',
+                title: 'สำเร็จ!',
+                text: 'อัปเดตตำแหน่งงานเรียบร้อยแล้ว',
+                timer: 1500,
+                showConfirmButton: false
+            });
+        }
+    });
+}
+
+
+
+
 
 function copyOnly(num) {
     navigator.clipboard.writeText(num).then(() => {
         Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `คัดลอกเบอร์ ${num} แล้ว`, showConfirmButton: false, timer: 2000 });
     });
 }
+
+
+
+
+
 
 function render(){
     const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area","it-area"];
@@ -413,7 +461,7 @@ function render(){
         const person=staffDirectory.find(s=>s.name===item.name);
         const div=document.createElement("div");
         div.className="card";
-        div.setAttribute("onclick", `showContact('${item.name}')`);
+        div.setAttribute("onclick", `showContact(${index})`);
 
         const posStyles = { 'DOC': '#9b59b6', 'DOCTOR': '#9b59b6', 'SUPERVISOR': '#f1c40f', 'EMD': '#e67e22', 'IT': '#455a64', 'CALL TAKER': '#2ecc71', 'พนักงานบันทึกข้อมูล': '#4da3ff', 'COORDINATOR': '#f39c12' };
         const currentPos = item.position.toUpperCase();
