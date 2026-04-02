@@ -8,50 +8,28 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
-
-
 <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
-
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 
 <style>
-/* --- สไตล์พื้นฐาน --- */
+/* --- สไตล์คงเดิมตามต้นฉบับ --- */
 *{font-family:Sarabun, sans-serif;box-sizing:border-box}
 body{margin:0;background:#f4f7f9;color:#2c3e50;padding-top: 5px;-webkit-user-select: none;-moz-user-select: none;-ms-user-select: none;user-select: none;}
-
-/* --- Header & Online Status --- */
 .header{display:flex;align-items:center;justify-content:space-between;padding:10px 30px;background: white;box-shadow: 0 2px 10px rgba(0,0,0,0.05);border-bottom: 2px solid #2f6df6; position: relative;}
 .header img{height:45px; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));}
-.header-center h2{font-size:18px;margin:0 0 5px 0;color: #1a2a6c;text-transform: uppercase;letter-spacing: 0.5px;}
-
-.online-status {
-    display: flex; align-items: center; gap: 8px; font-size: 12px; color: #27ae60; font-weight: 600;
-    position: absolute; top: 12px; right: 20px; background: rgba(240, 253, 244, 0.8);
-    padding: 4px 12px; border-radius: 20px; border: 1px solid #bdf0d2;
-}
-.pulse-dot {
-    width: 8px; height: 8px; background-color: #27ae60; border-radius: 50%;
-    box-shadow: 0 0 0 rgba(39, 174, 96, 0.4); animation: pulse 1.5s infinite;
-}
-@keyframes pulse {
-    0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); }
-    70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); }
-    100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); }
-}
-
+.header-center h2{font-size:18px;margin:0 0 5px 0;color: #1a2a6c;text-transform: uppercase;letter-spacing: 0.5px; text-align: center;}
+.online-status {display: flex; align-items: center; gap: 8px; font-size: 12px; color: #27ae60; font-weight: 600; position: absolute; top: 12px; right: 20px; background: rgba(240, 253, 244, 0.8); padding: 4px 12px; border-radius: 20px; border: 1px solid #bdf0d2;}
+.pulse-dot {width: 8px; height: 8px; background-color: #27ae60; border-radius: 50%; box-shadow: 0 0 0 rgba(39, 174, 96, 0.4); animation: pulse 1.5s infinite;}
+@keyframes pulse { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(39, 174, 96, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(39, 174, 96, 0); } }
 .clock-container {display: flex;flex-direction: column;align-items: center;background: linear-gradient(135deg, #ffffff 0%, #f0f4f8 100%);padding: 8px 25px;border-radius: 12px;border: 1px solid #d1d9e6;box-shadow: inset 0 2px 4px rgba(255,255,255,1), 0 4px 6px rgba(0,0,0,0.05);min-width: 300px;}
 #date { font-size: 12px; color: #5e6d82; font-weight: 400; }
 #time { font-size: 24px; font-weight: 700; color: #2f6df6; letter-spacing: 1px; margin-top: -2px;}
-
-/* --- ฟอร์มและปุ่มจัดการ --- */
 .form-box{background: white;padding:12px;margin:10px auto;border-radius:10px;max-width:1380px;display: grid;grid-template-columns: 1.2fr 1.5fr 1.2fr 0.6fr 0.6fr 0.8fr;gap: 10px;align-items: center;box-shadow: 0 4px 6px rgba(0,0,0,0.03);}
 input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8px;border: 1px solid #ced4da;padding: 0 12px;width: 100%;transition: all 0.2s;}
 .add-btn { background: #2f6df6; color: white; border: none; font-weight: 600; cursor: pointer; }
 .add-btn:hover { background: #1a56db; transform: translateY(-1px); }
 .clear-btn { background: white; color: #e74c3c; border: 1px solid #e74c3c; font-weight: 600; cursor: pointer; }
 .total-box {background: #eef3ff;border: 1px solid #2f6df6;color: #2f6df6;display: flex;align-items: center;justify-content: center;font-weight: 700;}
-
-/* --- บอร์ดแสดงรายชื่อ --- */
 .container{max-width:1400px;margin:auto;padding:0 15px 15px 15px;display: flex;flex-direction: column;gap: 10px;}
 .top-management {display: grid;grid-template-columns: 0.8fr 1.2fr 0.4fr;gap: 10px;}
 .management-box {background: #ffffff;padding: 10px;border-radius: 10px;border: 1.5px solid #2f6df6;}
@@ -62,58 +40,32 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 .shift-morning { border: 1px solid #f1c40f; border-left: 8px solid #f1c40f; background: #fffdf2; }
 .shift-afternoon { border: 1px solid #e67e22; border-left: 8px solid #e67e22; background: #fff8f2; }
 .shift h3{ margin:0 0 10px 0; display:flex; justify-content:space-between; align-items:center; font-size:15px; }
-
-.shift-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; justify-content: center;}
-.card{background:#fff;border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow: 0 2px 4px rgba(0,0,0,0.02); height: auto; min-height: 140px; cursor: pointer; transition: transform 0.2s;}
+.shift-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:8px; min-height: 50px;}
+.card{background:#fff;border-radius:8px;padding:10px 8px;display:flex;flex-direction:column;align-items:center;text-align:center;box-shadow: 0 2px 4px rgba(0,0,0,0.02); min-height: 140px; cursor: pointer; transition: transform 0.2s;}
 .card:hover{ transform: scale(1.05); box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-.card img{ width:40px; height:40px; border-radius:50%; object-fit:cover; margin-bottom:8px; border: 0px solid #f0f2f5; pointer-events: none; }
-.card strong{ font-size:11px; line-height: 1.3; display:block; color: #34495e; height: auto; overflow: visible; word-wrap: break-word; width: 100%; margin-bottom: 5px;}
+.card img{ width:40px; height:40px; border-radius:50%; object-fit:cover; margin-bottom:8px; pointer-events: none; }
+.card strong{ font-size:11px; line-height: 1.3; display:block; color: #34495e; word-wrap: break-word; width: 100%; margin-bottom: 5px;}
 .badge{ padding:3px 4px; border-radius:4px; font-size:9px; font-weight:700; color:white; margin-top:auto; width: 100%; text-transform: uppercase; }
-
-/* สีตำแหน่ง */
-.CALLTAKER{background:#2ecc71; color: black;}
-.พนักงานบันทึกข้อมูล{background:#4da3ff;}
-.COORDINATOR{background:#f39c12;} 
-.DOCTOR, .DOC{background:#9b59b6;} 
-.EMD{background:#e67e22;} 
-.SUPERVISOR{background:#f1c40f;color:black;} 
-.IT{background:#455a64;}
-
 .count{ background:#2f6df6; color:white; padding:2px 10px; border-radius:12px; font-size:12px; }
 .delete-shift-icon {color: #e74c3c;cursor: pointer;font-size: 18px;transition: transform 0.2s;user-select: none;}
 .delete{margin-top:8px; font-size:10px; color:#c0392b; cursor:pointer; opacity: 0.6;}
-
-/* --- สไตล์ปุ่มลิงก์แบบมืออาชีพ (ล่างสุด) --- */
-.external-links-container {
-    max-width: 1380px; margin: 40px auto; padding: 0 10px 60px;
-    display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px;
-}
-.link-card {
-    display: flex; align-items: center; padding: 20px 25px; text-decoration: none; border-radius: 20px;
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); background: #fff;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05);
-}
+.external-links-container { max-width: 1380px; margin: 40px auto; padding: 0 10px 60px; display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; }
+.link-card { display: flex; align-items: center; padding: 20px 25px; text-decoration: none; border-radius: 20px; transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1); background: #fff; box-shadow: 0 10px 20px rgba(0,0,0,0.03); border: 1px solid rgba(0,0,0,0.05); }
 .link-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(0,0,0,0.08); }
 .link-card.site { background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%); }
-.link-card.site .link-text strong { color: #ffffff; }
-.link-card.site .link-text span { color: rgba(255,255,255,0.8); }
+.link-card.site strong { color: #ffffff; }
+.link-card.site span { color: rgba(255,255,255,0.8); }
 .link-card.dashboard { background: #ffffff; border-left: 6px solid #10b981; }
-.link-card.dashboard:hover { border-left-width: 12px; }
-.link-icon-wrapper {
-    width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 15px;
-    display: flex; align-items: center; justify-content: center; font-size: 28px; margin-right: 20px;
-}
+.link-icon-wrapper { width: 60px; height: 60px; background: rgba(255,255,255,0.15); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 28px; margin-right: 20px; }
 .link-card.dashboard .link-icon-wrapper { background: #f0fdf4; }
 .link-text { display: flex; flex-direction: column; }
 .link-text span { font-size: 13px; margin-bottom: 2px; }
 .link-text strong { font-size: 18px; font-weight: 700; }
 .link-card.dashboard strong { color: #065f46; }
+.sortable-ghost { opacity: 0.4; background: #e2eafc !important; border: 2px dashed #2f6df6 !important; }
 </style>
 </head>
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-<body> 
-
-
+<body>
 
 <div class="header">
     <img src="https://i.postimg.cc/tgMz7SVd/sphch.png" alt="Logo Left"> 
@@ -125,9 +77,6 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
         </div>
     </div>
     <img src="https://i.postimg.cc/g0JDzFrV/xbc.png" alt="Logo Right">
-    
-	
-	
     <div class="online-status">
         <div class="pulse-dot"></div>
         <span>Live Connected</span>
@@ -209,34 +158,26 @@ input, select, button, .total-box {height: 42px;font-size: 14px;border-radius: 8
 
 <div class="external-links-container">
    <a href="https://apicharddummai.github.io/main/" class="link-card site">
-    <div class="link-icon-wrapper">
-        <i class="fa-solid fa-house" style="color: white;"></i>
-    </div>
-    <div class="link-text">
-        <span>Official Website</span>
-        <strong>กลับสู่หน้าหลัก</strong>
-    </div>
-</a>
+    <div class="link-icon-wrapper"><i class="fa-solid fa-house" style="color: white;"></i></div>
+    <div class="link-text"><span>Official Website</span><strong>กลับสู่หน้าหลัก</strong></div>
+   </a>
     <a href="https://lookerstudio.google.com/reporting/476d289c-1379-4812-a061-b2627c32ff1e" target="_blank" class="link-card dashboard">
         <div class="link-icon-wrapper">📊</div>
-        <div class="link-text">
-            <span>Statistical Overview</span>
-            <strong>EMS Performance Dashboard</strong>
-        </div>
+        <div class="link-text"><span>Statistical Overview</span><strong>Performance Dashboard</strong></div>
     </a>
 </div>
 
-<audio id="notifySound">
-    <source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg">
-</audio>
+<audio id="notifySound"><source src="https://assets.mixkit.co/sfx/preview/mixkit-correct-answer-tone-2870.mp3" type="audio/mpeg"></audio>
+
+<div onclick="toggleFS()" id="fs-icon" style="position: fixed; top: 10px; right: 10px; z-index: 10000; cursor: pointer; background: rgba(255,255,255,0.8); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; color: #2f6df6;">
+    <i class="fa-solid fa-expand" id="icon-fs"></i>
+</div>
 
 <script>
-// (ส่วน JavaScript เดิมของคุณทั้งหมด คงไว้เหมือนเดิม)
+/* --- Lock Protection --- */
 document.addEventListener('contextmenu', e => e.preventDefault());
-document.addEventListener('keydown', function(e) {
-    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) {
-        e.preventDefault(); return false;
-    }
+document.addEventListener('keydown', e => {
+    if (e.keyCode === 123 || (e.ctrlKey && e.shiftKey && e.keyCode === 73) || (e.ctrlKey && e.keyCode === 85)) e.preventDefault();
 });
 
 const firebaseConfig = {
@@ -279,21 +220,14 @@ const staffDirectory = [
 {name:"น.ส.กัญญาณัฐ สมบูรณ์",image:"https://i.postimg.cc/Dy94NV3g/น_องพ_ง.png", phone: "061-802-1169"},
 {name:"น.ส.รัตน์สุดา แสงสุข",image:"https://i.postimg.cc/MpV0gPmY/127966.jpg", phone: "061-091-9929"},
 {name:"น.ส.สมิตตานันท์ อนันตภักดิ์",image:"https://i.postimg.cc/13w0bCr0/127965.jpg", phone: "098-234-5168"},
-{name:"น.ส.ญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/prPfxnzw/n-xng-yan-sra.png", phone: ""},
 {name:"น.ส.ภรณ์ทิพย์ ทิพประมวล",image:"https://i.postimg.cc/xC8npMXh/x-xm2.png", phone: "093-614-5602"},
-
-
 {name:"น.ส.สุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg", phone: "062-382-6669"},
 {name:"นายณัฐพงศ์ มีศรี",image:"https://i.postimg.cc/ZYQp37jq/126874_0_0.jpg", phone: "095-660-7253"},
 {name:"น.ส.มาฆสิริ หอธรรม",image:"https://i.postimg.cc/T2sgm7QL/อ_ยล_าส_ด.png", phone: "062-347-8028"},
 {name:"นายบริพัตร กุประดิษฐ์",image:"https://i.postimg.cc/Y0TFH0hw/127961_0_0.jpg", phone: "094-303-3254"},
 {name:"นายธนรัช เดชกังวาล",image:"https://i.postimg.cc/qBFynbQq/127962_0_0.jpg", phone: "099-119-8028"},
-
-
 {name:"นายอภิชาติ ดุมใหม่",image:"https://i.postimg.cc/9QhpRgQj/xph-chat.jpg", phone: "094-953-2380"},
-
-
-{name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเอ_ะ.png", phone: "094-3972488, 093-1381669"},
+{name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเละ.png", phone: "094-3972488, 093-1381669"},
 {name:"นางธนัชพร สมาทอง",image:"https://i.postimg.cc/qMfcSDnq/แม_อ_ว2567.png", phone: "085-418-7227"},
 {name:"น.ส.พัชรี บุญชิต",image:"https://i.postimg.cc/RVc1B1QN/พ_หน_อยพ_ชร.jpg", phone: "090-263-1287"},
 {name:"น.ส.ว​ราภรณ์​ ปัจฉาพร",image:"https://i.postimg.cc/3JMjVfpd/พ_แก_ว.webp", phone: "061-952-3519​"},
@@ -314,9 +248,9 @@ const staffDirectory = [
 {name:"แพทย์หญิงวรรษพร  อมรไชย",image:"https://i.postimg.cc/CKfL37bh/74708.jpg", phone: ""}
 ];
 
-const nameList=document.getElementById("nameList");
-staffDirectory.forEach(s=>{
-    const opt=document.createElement("option"); opt.value=s.name; nameList.appendChild(opt);
+const nameList = document.getElementById("nameList");
+staffDirectory.forEach(s => {
+    const opt = document.createElement("option"); opt.value = s.name; nameList.appendChild(opt);
 });
 
 let data = [];
@@ -328,17 +262,17 @@ db.ref('shiftData').on('value', (snapshot) => {
 function syncData() { db.ref('shiftData').set(data); }
 
 function addItem(){
-    const shift=document.getElementById("shift").value;
-    const name=document.getElementById("name").value;
-    const position=document.getElementById("position").value;
+    const shift = document.getElementById("shift").value;
+    const name = document.getElementById("name").value.trim();
+    const position = document.getElementById("position").value;
     if(!name || !position){ alert("กรุณากรอกชื่อและตำแหน่ง"); return; }
-    data.push({shift,name,position});
+    data.push({shift, name, position});
     syncData();
     document.getElementById("notifySound").play();
-    document.getElementById("name").value="";
+    document.getElementById("name").value = "";
 }
 
-function removeItem(index){ data.splice(index,1); syncData(); }
+function removeItem(index){ data.splice(index, 1); syncData(); }
 
 function clearShift(shiftValue) {
     const shiftNames = { 'night': 'เวรดึก', 'morning': 'เวรเช้า', 'afternoon': 'เวรบ่าย' };
@@ -352,23 +286,18 @@ function clearShift(shiftValue) {
     }
 }
 
-function showContact(index) {
-    const item = data[index]; // ดึงข้อมูลจากลำดับที่คลิก
-    const person = staffDirectory.find(s => s.name === item.name);
+function showContact(staffName, staffPos, idx) {
+    const person = staffDirectory.find(s => s.name.replace(/\s+/g,'') === staffName.replace(/\s+/g,''));
     const phoneNumber = (person && person.phone) ? person.phone : "";
-    const imageUrl = (person && person.image) ? person.image : "";
+    const imageUrl = (person && person.image) ? person.image : "https://i.postimg.cc/9QhpRgQj/xph-chat.jpg";
 
-    // จัดการเบอร์โทรศัพท์
     const phoneNumbers = phoneNumber.split(/[, ]+/).filter(n => n.trim() !== "");
     let buttonsHTML = `<div style="display: flex; flex-direction: column; gap: 10px; margin-top: 15px;">`;
     
     if (phoneNumbers.length > 0) {
-        phoneNumbers.forEach((num, i) => {
+        phoneNumbers.forEach((num) => {
             const cleanNum = num.replace(/-/g, '');
-            buttonsHTML += `
-                <button onclick="copyOnly('${cleanNum}')" style="background:#2f6df6; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600;">
-                    📋 คัดลอกเบอร์: ${num}
-                </button>`;
+            buttonsHTML += `<button onclick="copyOnly('${cleanNum}')" style="background:#2f6df6; color:white; border:none; padding:10px; border-radius:8px; cursor:pointer; font-weight:600;">📋 คัดลอกเบอร์: ${num}</button>`;
         });
     } else {
         buttonsHTML += `<p style="color:#e74c3c;">❌ ไม่มีข้อมูลเบอร์โทรศัพท์</p>`;
@@ -376,123 +305,126 @@ function showContact(index) {
     buttonsHTML += `</div>`;
 
     Swal.fire({
-        title: `<span style="color: #1a2a6c; font-size: 22px;">${item.name}</span>`,
+        title: `<span style="color: #1a2a6c; font-size: 22px;">${staffName}</span>`,
         html: `
             <div style="text-align:center;">
                 <img src="${imageUrl}" style="width:120px; height:120px; border-radius:50%; object-fit:cover; border: 4px solid #2f6df6; margin-bottom:10px;">
                 <div style="margin-bottom:15px;">
                     <span style="font-size:14px; color:#666;">ตำแหน่งปัจจุบัน:</span><br>
-                    <strong style="font-size:18px; color:#2f6df6;">${item.position}</strong>
+                    <strong style="font-size:18px; color:#2f6df6;">${staffPos}</strong>
                 </div>
-                <button onclick="editPosition(${index})" style="background:#f39c12; color:white; border:none; padding:8px 20px; border-radius:20px; cursor:pointer; font-size:14px; transition:0.3s;">
-                    ✏️ แก้ไขตำแหน่งนี้
-                </button>
+                <button onclick="editPosition(${idx})" style="background:#f39c12; color:white; border:none; padding:8px 20px; border-radius:20px; cursor:pointer; font-size:14px;">✏️ แก้ไขตำแหน่งนี้</button>
                 <hr style="margin:20px 0; border:0; border-top:1px solid #eee;">
                 ${buttonsHTML}
             </div>`,
-        showConfirmButton: false,
-        showCloseButton: true
+        showConfirmButton: false, showCloseButton: true
     });
 }
 
 function editPosition(index) {
     const currentPos = data[index].position;
-    const allPositions = [
-        "DOCTOR", "SUPERVISOR", "EMD", "IT", "CALL TAKER", "พนักงานบันทึกข้อมูล", "COORDINATOR"
-    ];
-    
-    // สร้างตัวเลือกตำแหน่ง
+    const allPositions = ["DOCTOR", "SUPERVISOR", "EMD", "IT", "CALL TAKER", "พนักงานบันทึกข้อมูล", "COORDINATOR"];
     let optionsHTML = `<select id="swal-input-pos" class="swal2-input" style="width: 80%; font-family: Sarabun;">`;
-    allPositions.forEach(p => {
-        optionsHTML += `<option value="${p}" ${currentPos === p ? 'selected' : ''}>${p}</option>`;
-    });
+    allPositions.forEach(p => optionsHTML += `<option value="${p}" ${currentPos === p ? 'selected' : ''}>${p}</option>`);
     optionsHTML += `</select>`;
 
     Swal.fire({
         title: 'เปลี่ยนตำแหน่งงาน',
         html: optionsHTML,
-        focusConfirm: false,
-        showCancelButton: true,
-        confirmButtonText: 'บันทึกการแก้ไข',
-        cancelButtonText: 'ยกเลิก',
-        confirmButtonColor: '#2f6df6',
-        preConfirm: () => {
-            return document.getElementById('swal-input-pos').value;
-        }
+        showCancelButton: true, confirmButtonText: 'บันทึก', confirmButtonColor: '#2f6df6',
+        preConfirm: () => document.getElementById('swal-input-pos').value
     }).then((result) => {
         if (result.isConfirmed) {
-            // อัปเดตข้อมูลในตัวแปร data
             data[index].position = result.value;
-            
-            // ส่งข้อมูลที่แก้ไขแล้วขึ้น Firebase (syncData จะทำงานและ render ใหม่ให้อัตโนมัติ)
             syncData();
-            
-            Swal.fire({
-                icon: 'success',
-                title: 'สำเร็จ!',
-                text: 'อัปเดตตำแหน่งงานเรียบร้อยแล้ว',
-                timer: 1500,
-                showConfirmButton: false
-            });
         }
     });
 }
-
-
-
-
 
 function copyOnly(num) {
     navigator.clipboard.writeText(num).then(() => {
-        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `คัดลอกเบอร์ ${num} แล้ว`, showConfirmButton: false, timer: 2000 });
+        Swal.fire({ toast: true, position: 'top-end', icon: 'success', title: `คัดลอก ${num} แล้ว`, showConfirmButton: false, timer: 2000 });
     });
 }
 
+function render() {
+    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
+    areas.forEach(a => { const el = document.getElementById(a); if (el) el.innerHTML = ""; });
 
+    let counts = { morning: 0, afternoon: 0, night: 0 };
 
-
-
-
-function render(){
-    const areas = ["night","morning","afternoon","doctor-area","nurse-emd-area","it-area"];
-    areas.forEach(a => document.getElementById(a).innerHTML = "");
-    let counts={morning:0,afternoon:0,night:0};
-    
-    data.forEach((item,index)=>{
-        const person=staffDirectory.find(s=>s.name===item.name);
-        const div=document.createElement("div");
-        div.className="card";
-        div.setAttribute("onclick", `showContact(${index})`);
+    data.forEach((item, index) => {
+        const person = staffDirectory.find(s => s.name.replace(/\s+/g,'') === item.name.replace(/\s+/g,''));
+        const div = document.createElement("div");
+        div.className = "card";
+        div.setAttribute("onclick", `showContact('${item.name}', '${item.position}', ${index})`);
 
         const posStyles = { 'DOC': '#9b59b6', 'DOCTOR': '#9b59b6', 'SUPERVISOR': '#f1c40f', 'EMD': '#e67e22', 'IT': '#455a64', 'CALL TAKER': '#2ecc71', 'พนักงานบันทึกข้อมูล': '#4da3ff', 'COORDINATOR': '#f39c12' };
-        const currentPos = item.position.toUpperCase();
+        const currentPos = item.position ? item.position.toUpperCase() : "";
         const borderColor = posStyles[currentPos] || '#eaedf2';
         div.style.border = `2.5px solid ${borderColor}`;
 
-        div.innerHTML=`
-    <img src="${person?person.image:''}">
-    <strong class="staff-name">${item.name}</strong>
-    <span class="badge ${item.position.replace(/\s/g,'')} staff-pos">${item.position}</span>
-    <input type="hidden" class="staff-shift" value="${item.shift}"> 
-    <div class="delete" onclick="event.stopPropagation(); removeItem(${index})">ลบออก</div>
-`;
+        const defaultImg = "https://i.postimg.cc/9QhpRgQj/xph-chat.jpg";
+        const displayImg = person ? person.image : defaultImg;
 
-        if(currentPos === "DOC" || currentPos === "DOCTOR") { 
+        div.innerHTML = `
+            <img src="${displayImg}" onerror="this.src='${defaultImg}'">
+            <strong class="staff-name">${item.name}</strong>
+            <span class="badge staff-pos" style="background-color: ${borderColor}">${item.position}</span>
+            <input type="hidden" class="staff-shift" value="${item.shift || ''}"> 
+            <div class="delete" onclick="event.stopPropagation(); removeItem(${index})">ลบออก</div>
+        `;
+
+        if (currentPos === "DOC" || currentPos === "DOCTOR") {
             document.getElementById("doctor-area").appendChild(div);
-        } else if(currentPos === "SUPERVISOR" || currentPos === "EMD") {
+        } else if (currentPos === "SUPERVISOR" || currentPos === "EMD") {
             document.getElementById("nurse-emd-area").appendChild(div);
-        } else if(currentPos === "IT") {
+        } else if (currentPos === "IT") {
             document.getElementById("it-area").appendChild(div);
-        } else { 
-            counts[item.shift]++; 
-            document.getElementById(item.shift).appendChild(div); 
+        } else {
+            if (counts[item.shift] !== undefined) counts[item.shift]++;
+            const shiftArea = document.getElementById(item.shift);
+            if (shiftArea) shiftArea.appendChild(div);
         }
     });
 
-    document.getElementById("morningCount").textContent=counts.morning;
-    document.getElementById("afternoonCount").textContent=counts.afternoon;
-    document.getElementById("nightCount").textContent=counts.night;
-    document.getElementById("totalCount").textContent=data.length;
+    document.getElementById("morningCount").textContent = counts.morning;
+    document.getElementById("afternoonCount").textContent = counts.afternoon;
+    document.getElementById("nightCount").textContent = counts.night;
+    document.getElementById("totalCount").textContent = data.length;
+
+    initSortable(); // เรียกใช้ทุกครั้งหลังเรนเดอร์
+}
+
+function initSortable() {
+    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
+    areas.forEach(areaId => {
+        const el = document.getElementById(areaId);
+        if (!el) return;
+        if (el.sortable) el.sortable.destroy(); // ล้างอันเก่าทิ้งก่อนป้องกัน Error
+        el.sortable = new Sortable(el, {
+            group: 'shared', animation: 150, ghostClass: 'sortable-ghost',
+            onEnd: () => saveNewOrder()
+        });
+    });
+}
+
+function saveNewOrder() {
+    let newData = [];
+    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
+    areas.forEach(areaId => {
+        const container = document.getElementById(areaId);
+        const cards = container.querySelectorAll('.card');
+        cards.forEach(card => {
+            const name = card.querySelector('.staff-name').innerText;
+            const position = card.querySelector('.staff-pos').innerText;
+            let shift = card.querySelector('.staff-shift').value;
+            if (["night", "morning", "afternoon"].includes(areaId)) shift = areaId;
+            newData.push({ name, position, shift });
+        });
+    });
+    data = newData;
+    db.ref('shiftData').set(data);
 }
 
 function updateClock(){
@@ -500,103 +432,24 @@ function updateClock(){
     document.getElementById("time").textContent=now.toLocaleTimeString("th-TH",{hour12:false});
     document.getElementById("date").textContent=now.toLocaleDateString("th-TH",{weekday:"long",year:"numeric",month:"long",day:"numeric"});
 }
-setInterval(updateClock,1000);
-updateClock();
+setInterval(updateClock,1000); updateClock();
 
 function clearAll(){ if(confirm("ต้องการลบรายชื่อทั้งหมดหรือไม่?")){ data = []; syncData(); } }
-</script>
 
-
-
-<div onclick="toggleFS()" id="fs-icon" style="position: fixed; top: 10px; right: 10px; z-index: 10000; cursor: pointer; background: rgba(255,255,255,0.8); width: 32px; height: 32px; border-radius: 50%; display: flex; align-items: center; justify-content: center; border: 1px solid #ddd; color: #2f6df6; box-shadow: 0 2px 5px rgba(0,0,0,0.1);">
-    <i class="fa-solid fa-expand" id="icon-fs"></i>
-</div>
-
-<script>
 function toggleFS() {
     const icon = document.getElementById("icon-fs");
     if (!document.fullscreenElement) {
         document.documentElement.requestFullscreen();
         icon.classList.replace("fa-expand", "fa-compress");
     } else {
-        if (document.exitFullscreen) {
-            document.exitFullscreen();
-            icon.classList.replace("fa-compress", "fa-expand");
-        }
-    }
-}
-
-// ถ้ากด Esc ให้ไอคอนเปลี่ยนกลับเอง
-document.addEventListener('fullscreenchange', () => {
-    const icon = document.getElementById("icon-fs");
-    if (!document.fullscreenElement) {
+        document.exitFullscreen();
         icon.classList.replace("fa-compress", "fa-expand");
     }
+}
+document.addEventListener('fullscreenchange', () => {
+    const icon = document.getElementById("icon-fs");
+    if (!document.fullscreenElement) icon.classList.replace("fa-compress", "fa-expand");
 });
-
-
-// ฟังก์ชันสำหรับเปิดระบบลากวาง
-function initSortable() {
-    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
-    
-    areas.forEach(areaId => {
-        const el = document.getElementById(areaId);
-        if (!el) return;
-
-        new Sortable(el, {
-            group: 'shared', // ย้ายข้ามกลุ่มได้ (เช่น ย้ายจากเวรเช้าไปบ่าย)
-            animation: 150,
-            ghostClass: 'sortable-ghost', // คลาสหลอกตอนลาก
-            onEnd: function () {
-                // เมื่อลากวางเสร็จ ให้ทำการรวมข้อมูลใหม่จากหน้าจอ
-                saveNewOrder();
-            },
-        });
-    });
-}
-
-// ฟังก์ชันอ่านลำดับจากหน้าจอ แล้วบันทึกลง Firebase
-function saveNewOrder() {
-    let newData = [];
-    const areas = ["night", "morning", "afternoon", "doctor-area", "nurse-emd-area", "it-area"];
-
-    areas.forEach(areaId => {
-        const container = document.getElementById(areaId);
-        const cards = container.querySelectorAll('.card');
-
-        cards.forEach(card => {
-            const name = card.querySelector('.staff-name').innerText;
-            const position = card.querySelector('.staff-pos').innerText;
-            let shift = card.querySelector('.staff-shift').value;
-
-            // ถ้าลากข้ามกลุ่มเวรหลัก ให้เปลี่ยนค่า shift ตามกลุ่มใหม่
-            if (["night", "morning", "afternoon"].includes(areaId)) {
-                shift = areaId;
-            }
-
-            newData.push({ name, position, shift });
-        });
-    });
-
-    // อัปเดตตัวแปร data และส่งขึ้น Firebase
-    data = newData;
-    db.ref('shiftData').set(data);
-}
-
-// แก้ไขฟังก์ชัน render เดิมของคุณเล็กน้อย
-// ให้เรียกใช้ initSortable() ทุกครั้งหลังวาดหน้าจอเสร็จ
-const originalRender = render;
-render = function() {
-    originalRender();
-    initSortable();
-};
-
-
 </script>
 </body>
-
-
-
-
 </html>
-
