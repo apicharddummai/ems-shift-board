@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="th">
+
+<head>
+
+
+    <meta charset="UTF-8">
+    <title>EMS Hospital Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;700;800&display=swap" rel="stylesheet">
+    <style>
+	
+	
+	
+	
+	
+	/* จัดกลุ่มชื่อ-นามสกุล */
+.name-wrapper{
+    min-height: 120px;
+    overflow: visible;
+}
+
+
+.page-title h1 {
+    font-size: 36px;
+    color: #0369a1;
+    font-weight: 700;
+}
+
+/* เพิ่มความสวยงามให้กับข้อมูล */
+.info { 
+    font-size: 32px; 
+    color: #334155; 
+    display: flex; 
+    align-items: center; 
+    gap: 15px; 
+    margin-bottom: 12px;
+    font-weight: 500;
+}
+	
+	
+:root {
+    --primary-bg: #e0f2fe;
+    --card-bg: #ffffff;
+    --glass-border: #bae6fd;
+    --text-main: #0c4a6e;
+    --text-sub: #0369a1;
+    --accent-blue: #0ea5e9;
+    --accent-green: #059669;
+    --accent-red: #ef4444; /* สีสำหรับลูกเล่น */
+    --fs-btn-bg: #0ea5e9;
+}
+
+body { 
+    margin: 0; padding: 0; 
+    background: var(--primary-bg);
+    font-family: 'Sarabun', sans-serif; 
+    overflow: hidden; height: 100vh; 
+    color: var(--text-main);
+}
+
+/* Header Section */
+#header-wrapper {
+    position: fixed; top: 0; left: 0; width: 100%; height: 120px;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0 50px; box-sizing: border-box; z-index: 100;
+    background: #ffffff;
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+}
+
+#date-box { display: flex; flex-direction: column; }
+#date-display { font-size: 28px; color: #64748b; font-weight: 400; }
+
+#header-right { display: flex; align-items: center; gap: 30px; }
+.logo-box { display: flex; gap: 15px; align-items: center; }
+.logo-img { height: 70px; filter: drop-shadow(0 0 10px rgba(59, 130, 246, 0.5)); }
+
+#clock { 
+    font-size: 60px; font-weight: 800; 
+    color: #0369a1; 
+    text-shadow: none; 
+}
+
+/* Card Section */
+#slider-wrapper { display: flex; align-items: center; justify-content: center; width: 100vw; height: 100vh; padding-top: 60px; box-sizing: border-box;}
+#slider { display: flex; transition: transform 1s cubic-bezier(0.65, 0, 0.35, 1); width: 100vw; will-change: transform; }
+.slide { min-width: 100vw; display: flex; justify-content: center; align-items: center; }
+
+.card { 
+    width: 85vw; height: 500px; background: var(--card-bg); border-radius: 40px; 
+    display: flex; align-items: center; padding: 50px 70px; 
+    box-shadow: 0 10px 25px -5px rgba(0,0,0,0.1); 
+    border: 2px solid #f1f5f9; position: relative; overflow: hidden;
+}
+h1 {
+    font-size: clamp(40px, 4vw, 75px);
+    color: #0f172a;
+    margin: 0;
+    font-weight: 800;
+    line-height: 1.1;
+
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.staff-name{
+    font-size: 72px;
+    font-weight: 800;
+    color: #0f172a;
+
+    line-height: 1.45;
+    padding-top: 12px;
+
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    overflow: hidden;
+}
+
+
+.img-wrapper { width: 380px; height: 380px; border-radius: 30px; margin-right: 60px; flex-shrink: 0; position: relative; z-index: 3; }
+.img-box { width: 100%; height: 100%; border-radius: 30px; object-fit: cover; border: 4px solid rgba(0,0,0,0.05); }
+
+/* แก้ไขส่วนนี้: ทำ `.text-content` ให้เป็นกรอบสำหรับลายน้ำ */
+.text-content {
+    flex: 1;
+    min-width: 0; /* สำคัญมาก */
+    position: relative;
+    z-index: 2;
+}
+
+/* เพิ่มส่วนนี้ใหม่: สไตล์สำหรับลายน้ำ สพฉ. ขนาดใหญ่ ตรงกลาง */
+.text-content::before {
+    content: "";
+    position: absolute;
+    top: 50%; /* วางตำแหน่งให้อยู่กลางแนวตั้ง */
+    left: 50%; /* วางตำแหน่งให้อยู่กลางแนวนอน */
+    transform: translate(-50%, -50%); /* จัดตำแหน่งให้กึ่งกลางรูปตรงกับกึ่งกลางกรอบ */
+    width: 500px; /* ขนาดโลโก้ที่ใหญ่ขึ้น (ปรับได้ตามต้องการ) */
+    height: 500px; /* ขนาดโลโก้ที่ใหญ่ขึ้น (ปรับได้ตามต้องการ) */
+    background-image: url('https://i.postimg.cc/tgMz7SVd/sphch.png'); /* URL โลโก้ */
+    background-size: contain;
+    background-repeat: no-repeat;
+    opacity: 0.1; /* ความจาง (0.1 คือจางมาก) */
+    pointer-events: none; /* เพื่อไม่ให้ขวางการคลิก */
+    z-index: -1; /* ให้อยู่ข้างหลังข้อความเสมอ */
+}
+
+/* ลูกเล่นเก่า: Scanner (ยังอยู่) */
+.card::after {
+    content: ''; position: absolute; top: 0; left: -100%;
+    width: 50%; height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(34, 2, 238, 0.1), transparent);
+    animation: scanner 4s infinite linear; pointer-events: none;
+    z-index: 4; /* ให้อยู่หน้าสุด */
+}
+@keyframes scanner { 0% { left: -100%; } 100% { left: 200%; } }
+
+.animated-line { 
+    width: 150px; height: 4px; background: linear-gradient(90deg, var(--accent-blue), transparent); 
+    margin: 20px 0; animation: beam 2s infinite linear; box-shadow: 0 0 8px var(--accent-blue);
+}
+@keyframes beam { 0% { transform: translateX(0); opacity: 0; } 50% { opacity: 1; } 100% { transform: translateX(200px); opacity: 0; } }
+
+.info { font-size: 38px; color: #334155; display: flex; align-items: center; gap: 15px; margin-bottom: 10px; }
+.phone-box { 
+    font-size: 30px; 
+    color: #059669 !important; /* บังคับให้เป็นสีเขียวนี้ */
+    font-weight: 700; 
+    margin-top: 30px; 
+    padding: 10px 20px; 
+    border-top: 2px solid rgba(0,0,0,0.05); 
+    display: inline-block; 
+}
+
+#fs-btn { 
+    position: fixed; bottom: 30px; right: 30px; z-index: 1000; 
+    padding: 10px 20px; font-size: 14px; background: var(--accent-blue); color: #fff; 
+    border: none; border-radius: 12px; cursor: pointer;
+	
+	
+}
+</style>
+</head>
+<body>
+
+
+    <div id="header-wrapper">
+	<div class="page-title">
+    <h1>เวรประจำวัน EMS 1669 UBON</h1>
+</div>
+        <div id="date-box">
+            <div id="date-display">...</div>
+        </div>
+        <div id="header-right">
+            <div id="clock">00:00:00</div>
+            <div class="logo-box">
+                <img src="https://i.postimg.cc/tgMz7SVd/sphch.png" class="logo-img">
+                <img src="https://i.postimg.cc/g0JDzFrV/xbc.png" class="logo-img">
+            </div>
+        </div>
+    </div>
+
+    <button id="fs-btn" onclick="toggleFullScreen()">⛶ เต็มจอ</button>
+
+    <div id="slider-wrapper">
+        <div id="slider"></div>
+    </div>
+	
+
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.17.1/firebase-database-compat.js"></script>
+    <script>
+        function toggleFullScreen() { if (!document.fullscreenElement) document.documentElement.requestFullscreen(); else document.exitFullscreen(); }
+        firebase.initializeApp({databaseURL: "https://ems-shift-board-default-rtdb.asia-southeast1.firebasedatabase.app"});
+
+        const staffDirectory = [
+            {name:"นายวิระบูรณ์ แก่นภักดี",image:"https://i.postimg.cc/P51vs6dR/ว_ระบ_รณ.jpg", phone: "094-640-1006"},
+{name:"นางสาวนริศรา มะลิหอม",image:"https://i.postimg.cc/sg5Gdn36/ม_วนร_ศรา1.jpg", phone: "064-728-8646"},
+{name:"นางสาวเบญจมาศ ชามาตย์",image:"https://i.postimg.cc/7YFJRvrT/เปร_ยว_เบญจมาศ1.jpg", phone: "062-087-3914"},
+{name:"นางสาวรัตติยา พันชัย",image:"https://i.postimg.cc/L6cgWdMK/ร_ตต_ยา_พ_หน_ง.jpg", phone: "088-582-9424"},
+{name:"นายนิกร วงศ์กำแหง",image:"https://i.postimg.cc/qMP6FfHQ/น_กร.jpg", phone: "084-041-1250"},
+{name:"นางสาวกุณฑิกา ส่งเสริม",image:"https://i.postimg.cc/FsMk6tXb/ก_ณฑ_กา_พ_ก_อย1.jpg", phone: "063-791-3832"},
+{name:"นายกฤษกร นางาม",image:"https://i.postimg.cc/GhWTf0nk/กฤษกร_พ_แป_บ.jpg", phone: "099-472-4980"},
+{name:"นางสาวเกตน์นิภา การะวัตร์",image:"https://i.postimg.cc/m2v1nxWH/เกตน_น_ภา.jpg", phone: "095-613-4200 , 064-459-8756"},
+{name:"นายชุติณัฐ มหิษานนท์",image:"https://i.postimg.cc/BQrPzWfw/พ_ณ_ฐ11.png", phone: "088-047-3034"},
+{name:"นางสาวเสาวลักษณ์ ชารีโสม",image:"https://i.postimg.cc/jdpn1VYF/พ_แอนเสารว_ล_กษณ.jpg", phone: "082-326-8141"},
+{name:"นางสาวนุชจรินทร์ รักษารอด",image:"https://i.postimg.cc/zXsHQmYT/ก_ต_าร_น_ชจร_นทร.jpg", phone: "062-152-1859"},
+{name:"นางสาวหทัยชนก มะตัน",image:"https://i.postimg.cc/QdcKG6j2/หท_ยชนก.jpg", phone: "086-868-1845"},
+{name:"นางสาวสิริกานต์ สีแดง",image:"https://i.postimg.cc/GmvTwMc0/ส_ร_กานต.jpg", phone: "082-371-3736"},
+{name:"นางสาววิรากานต์ วงค์อินทร์",image:"https://i.postimg.cc/SNBYP0b9/1น_ว2.png", phone: "088-225-5547"},
+{name:"นางสาวสุพัฒตา อุทุมพันธ์",image:"https://i.postimg.cc/JzjHVT1C/อร_ส_พ_ฒตา.png", phone: "061-262-8855"},
+{name:"นางสาววรรณนิภา ดวงคำ",image:"https://i.postimg.cc/8zLfQyTZ/วรรณ_ภา.jpg", phone: "064-905-2314"},
+{name:"นางสาวอาจานี มาสพันธ์",image:"https://i.postimg.cc/dVGZPWqK/อาจาน_แอน.jpg", phone: "094-490-0425"},
+{name:"นางสาวกาญจนา ราษี",image:"https://i.postimg.cc/BQrPzWfP/เจน_กาญจนา.jpg", phone: "097-123-9465"},
+{name:"นางมลฤดี จันทะพา",image:"https://i.postimg.cc/Dy94NV3D/มลฤด.jpg", phone: "063-606-1396"},
+{name:"นางสาวพรพิมล จันทา",image:"https://i.postimg.cc/Kv63WXh0/พรพ_มล_น_องแอน.jpg", phone: "083-736-1433"},
+{name:"นางสาวฉัตรฐริกา คุณมี",image:"https://i.postimg.cc/Kv63WXhr/ฉ_ตรฐร_กา.jpg", phone: "064-606-8158"},
+{name:"นางสาวณัฐพัชร์ สมใสวิวิตรกุล",image:"https://i.postimg.cc/9F6wk3Hg/พ_เฟ_อง1.png", phone: "065-598-9396"},
+{name:"นางสาวกัญญาณัฐ สมบูรณ์",image:"https://i.postimg.cc/Dy94NV3g/น_องพ_ง.png", phone: "061-802-1169"},
+{name:"นางสาวรัตน์สุดา แสงสุข",image:"https://i.postimg.cc/MpV0gPmY/127966.jpg", phone: "061-091-9929"},
+{name:"นางสาวญานิพร วงศ์เจริญ",image:"https://i.postimg.cc/prPfxnzw/น_องญาน_ศรา.png", phone: "065-115-0105"},
+{name:"นางสาวภรณ์ทิพย์ ทิพประมวล",image:"https://i.postimg.cc/xC8npMXh/x-xm2.png", phone: "093-614-5602"},
+{name:"นายเมธานันท์ เจริญชัย",image:"https://i.postimg.cc/C1PPbG6H/male-avatar-placeholder.png", phone: "094-269-8778"},
+
+{name:"นางสาวสุทธิดา ภาระเวช",image:"https://i.postimg.cc/yx2RHxkB/ส_ทธ_ดา_บ_ม.jpg", phone: "062-382-6669"},
+{name:"นายณัฐพงศ์ มีศรี",image:"https://i.postimg.cc/ZYQp37jq/126874_0_0.jpg", phone: "095-660-7253"},
+{name:"นางสาวมาฆสิริ หอธรรม",image:"https://i.postimg.cc/T2sgm7QL/อ_ยล_าส_ด.png", phone: "062-347-8028"},
+{name:"นายบริพัตร กุประดิษฐ์",image:"https://i.postimg.cc/Y0TFH0hw/127961_0_0.jpg", phone: "094-303-3254"},
+{name:"นายธนรัช เดชกังวาล",image:"https://i.postimg.cc/qBFynbQq/127962_0_0.jpg", phone: "099-119-8028"},
+{name:"นายอภิชาติ ดุมใหม่",image:"https://i.postimg.cc/9QhpRgQj/xph-chat.jpg", phone: "094-953-2380"},
+{name:"นางเพ็ญศรี สุวรรณกูฎ",image:"https://i.postimg.cc/TY8jFNmP/แม_เเละ.png", phone: "094-3972488, 093-1381669"},
+{name:"นางธนัชพร สมาทอง",image:"https://i.postimg.cc/qMfcSDnq/แม_อ_ว2567.png", phone: "085-418-7227"},
+{name:"นางสาวพัชรี บุญชิต",image:"https://i.postimg.cc/RVc1B1QN/พ_หน_อยพ_ชร.jpg", phone: "090-263-1287"},
+{name:"นางสาวว​ราภรณ์​ ปัจฉาพร",image:"https://i.postimg.cc/3JMjVfpd/พ_แก_ว.webp", phone: "061-952-3519​"},
+{name:"นางอินทิรา นิธิวัฒนพงษ์",image:"https://i.postimg.cc/28pdM9vb/พ_ต_อ_นท_รา.webp", phone: "089-283-9138"},
+{name:"นายอุดม พงษ์พิละ",image:"https://i.postimg.cc/rFFyVM5v/asdasd.png", phone: "061-943-9779"},
+{name:"นางสาวทิพยวัลย์ สุทธาคง",image:"https://i.postimg.cc/wTK5Z4JN/พ_ว_ลย_พ_หน_ง.jpg", phone: "080-156-7759"},
+{name:"นางสาวเบ็ญจวรรณ พรมบุตร",image:"https://i.postimg.cc/wTh5p5cL/พ_เอ_เบ_ญ.png", phone: "080-330-1505"},
+{name:"นายคม พันเพียง",image:"https://i.postimg.cc/xTrGhpH1/ค_ณชายคม_พ_นธ_เพ_ยง.png", phone: "099-078-7842"},
+{name:"นางรัศมี สืบบุตร",image:"https://i.postimg.cc/sD6j1qJb/พ_หม.png", phone: "089-491-3091"},
+{name:"นางสาววรุณรัตน์ ชนะศรีรัตนกุล",image:"https://i.postimg.cc/DyVQHpsZ/เจ_เก_ง.png", phone: "085-419-2898"},
+{name:"นางสาวจุติมา สมบูรณ์",image:"https://i.postimg.cc/jqPw6VWL/S-24682501.jpg", phone: "086-408-9205"},
+{name:"นางสาวฤทัยทิพย์ ดวงศรี",image:"https://i.postimg.cc/3JS8WVZP/พ_เหม_ยว.png", phone: "087-877-5255"},
+{name:"นายธีระศักดิ์ การแก้ว",image:"https://i.postimg.cc/3JS8WVZq/พ_ธ_ร.jpg", phone: "087-557-6633"},
+{name:"นางสาวจันทร์จิรา จันทร์สว่าง",image:"https://i.postimg.cc/Fstb8Cc1/จ_นทร_จ_รา_ตต.jpg", phone: "098-829-8552"},
+{name:"นางสาวพัชรี พลกันยา",image:"https://i.postimg.cc/TYR240qy/EMD-n-xngx-y.png", phone: "089-661-7762"},
+{name:"นางสาวเบญจวรรณ อ่อนอรรถ",image:"https://i.postimg.cc/9F3PKgTw/พ_เอ_เบญจวรรณ.png", phone: "085-104-5092, 092-256-7107"},
+{name:"นายแพทย์ชัยพร บุญศรี",image:"https://i.postimg.cc/Dzby9612/74711.jpg", phone: "092-556-6651"},
+{name:"แพทย์หญิงวรรษพร อมรไชย",image:"https://i.postimg.cc/CKfL37bh/74708.jpg", phone: "085-764-1859"}
+        ];
+
+        function updateDateTime() {
+            const now = new Date();
+            document.getElementById('date-display').innerText = now.toLocaleDateString('th-TH', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' });
+            document.getElementById('clock').innerText = now.toLocaleTimeString('th-TH');
+        }
+        setInterval(updateDateTime, 1000);
+        updateDateTime();
+
+        // เปลี่ยนฟังก์ชัน normalize เป็นแบบนี้
+const normalize = (str) => {
+    if (!str) return "";
+    return str.toString()
+        .replace(/นางสาว/g, '') // ลบคำว่า นางสาว ออก
+        .replace(/น\.ส\./g, '') // ลบคำว่า น.ส. ออก
+        .replace(/นาย/g, '')    // ลบคำว่า นาย ออก
+        .replace(/นาง/g, '')    // ลบคำว่า นาง ออก
+        .replace(/แพทย์หญิง/g, '') // ลบคำว่า แพทย์หญิง ออก
+        .replace(/นายแพทย์/g, '')  // ลบคำว่า นายแพทย์ ออก
+        .replace(/\s+/g, '')     // ตัดช่องว่างทั้งหมด
+        .trim();
+};
+
+    firebase.database().ref('shiftData').on('value', snap => {
+        const list = snap.val() ? Object.values(snap.val()) : [];
+        const slider = document.getElementById('slider');
+        slider.innerHTML = "";
+        
+        list.forEach(item => {
+            // ตอนนี้จะหาเจอแม่นขึ้น
+			// --- แก้ไขตรงนี้ครับ ---
+let rawName = item.name || '';
+
+// ลบคำว่า "น.ส." ออก (ถ้ามีหลุดมา) เพื่อให้แน่ใจว่ามันจะแสดงเป็น "นางสาว"
+// และลบคำนำหน้าอื่นๆ ที่ไม่ต้องการออก (ถ้ามี)
+let displayName = rawName
+    .replace(/น\.ส\./g, 'นางสาว') // เปลี่ยน น.ส. เป็น นางสาว (ถ้ามี)
+    .replace(/นาย|นาง|แพทย์หญิง|นายแพทย์/g, '') // ลบคำนำหน้าอื่นออก
+    .trim();
+
+// ตรวจสอบพิเศษ: ถ้าชื่อต้นฉบับมีคำว่า "นางสาว" อยู่แล้ว มันจะคงไว้ให้
+// แต่ถ้าไม่มี (เช่นเป็นชื่อชาย) และคำนำหน้าอื่นถูกลบไปแล้ว มันจะเหลือแค่ชื่อครับ
+// --- จบส่วนที่แก้ไข ---
+            const person = staffDirectory.find(s => normalize(s.name) === normalize(item.name));
+            const img = (person && person.image) ? person.image : 'https://cdn-icons-png.flaticon.com/512/3135/3135715.png';
+            const phone = (person && person.phone) ? person.phone : 'ไม่ระบุเบอร์';
+                
+                const shiftMap = { 'morning': '☀️ เช้า', 'afternoon': '🌤️ บ่าย', 'night': '🌙 ดึก' };
+                const shiftLabel = shiftMap[item.shift?.toLowerCase()] || item.shift || '-';
+
+               
+                const icon = getPositionIcon(item.position || '');
+                
+                const cleanPos = (item.position || '').replace(/👨‍⚕️|👩‍⚕️|📟|💻|📞|📝|📻|👤/g, '').trim();
+
+                slider.innerHTML += `
+                    <div class="slide">
+                        <div class="card">
+                            <div class="img-wrapper">
+                                <img src="${img}" class="img-box" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3135/3135715.png'">
+                            </div>
+                            <div class="text-content">
+                               <div class="name-wrapper">
+    <h1 class="staff-name">${item.name || 'ไม่มีชื่อ'}</h1>
+    <div class="animated-line"></div>
+</div>
+                                    <div class="info"><span class="info-icon">${icon}</span> ตำแหน่ง : ${cleanPos}</div>
+									<br></br>
+                                <div class="info-group">
+                                    <div class="info"><span class="info-icon">🗓️</span> เวร : ${shiftLabel}</div>
+                                </div>
+                                <div class="phone-box"><span class="phone-icon">📞</span> เบอร์ติดต่อ :  ${phone}</div>
+                            </div>
+                        </div>
+                    </div>`;
+            });
+        });
+
+        let idx = 0;
+        setInterval(() => {
+            const slides = document.querySelectorAll('.slide');
+            const slider = document.getElementById('slider');
+            if(slides.length > 0) {
+                if (idx < slides.length - 1) { idx++; slider.style.transition = 'transform 3s cubic-bezier(0.65, 0, 0.35, 1)'; slider.style.transform = `translateX(-${idx * 100}vw)`; } 
+                else { idx = 0; slider.style.transition = 'none'; slider.style.transform = `translateX(0)`; }
+            }
+        }, 6000);
+		
+		function getPositionIcon(pos) {
+    const p = pos.toUpperCase();
+    if (p.includes("DOCTOR")) return "👨‍⚕️";
+    if (p.includes("SUPERVISOR")) return "👩‍⚕️";
+    if (p.includes("EMD")) return "📟";
+    if (p.includes("IT")) return "💻";
+    if (p.includes("CALL TAKER")) return "📞";
+    if (p.includes("บันทึก")) return "📝";
+    if (p.includes("COORDINATOR")) return "📻";
+    return "👤";
+}
+
+
+
+		
+    </script>
+	
+	<script>
+    // ป้องกันการคลิกขวา
+    document.addEventListener('contextmenu', function(e) {
+        e.preventDefault();
+    });
+
+    // ป้องกันการกดคีย์ลัดสำหรับการดูซอร์สโค้ด (F12, Ctrl+Shift+I, Ctrl+U)
+    document.onkeydown = function(e) {
+        if (event.keyCode == 123) { // F12
+            return false;
+        }
+        if (e.ctrlKey && e.shiftKey && e.keyCode == 'I'.charCodeAt(0)) { // Ctrl+Shift+I
+            return false;
+        }
+        if (e.ctrlKey && e.keyCode == 'U'.charCodeAt(0)) { // Ctrl+U
+            return false;
+        }
+    };
+</script>
+	
+	
+</body>
+</html>
